@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>iconfont.ttf</file>
+        <file>mask.png</file>
+    </qresource>
+</RCC>

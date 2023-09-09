@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>887</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>887</width>
+     <height>25</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <property name="toolTip">
+    <string/>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionOpenFile"/>
+   <addaction name="actionSaveFile"/>
+   <addaction name="separator"/>
+   <addaction name="actionSelect"/>
+   <addaction name="actionDrawRect"/>
+   <addaction name="actionDrawPolygon"/>
+   <addaction name="separator"/>
+   <addaction name="actionScaleUp"/>
+   <addaction name="actionScaleDown"/>
+   <addaction name="actionFitWindow"/>
+   <addaction name="actionOriginalSize"/>
+   <addaction name="separator"/>
+   <addaction name="actionPixelPicker"/>
+  </widget>
+  <action name="actionDrawRect">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>DrawRect</string>
+   </property>
+   <property name="toolTip">
+    <string>draw rectangle</string>
+   </property>
+  </action>
+  <action name="actionDrawPolygon">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>DrawPolygon</string>
+   </property>
+   <property name="toolTip">
+    <string>draw polygon</string>
+   </property>
+  </action>
+  <action name="actionScaleUp">
+   <property name="text">
+    <string>ScaleUp</string>
+   </property>
+   <property name="toolTip">
+    <string>scale up</string>
+   </property>
+  </action>
+  <action name="actionScaleDown">
+   <property name="text">
+    <string>ScaleDown</string>
+   </property>
+   <property name="toolTip">
+    <string>scale down</string>
+   </property>
+  </action>
+  <action name="actionFitWindow">
+   <property name="text">
+    <string>FitWindow</string>
+   </property>
+   <property name="toolTip">
+    <string>fit window</string>
+   </property>
+  </action>
+  <action name="actionOriginalSize">
+   <property name="text">
+    <string>OriginalSize</string>
+   </property>
+   <property name="toolTip">
+    <string>original size</string>
+   </property>
+  </action>
+  <action name="actionPixelPicker">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>PixelPicker</string>
+   </property>
+   <property name="toolTip">
+    <string>pixel picker</string>
+   </property>
+  </action>
+  <action name="actionOpenFile">
+   <property name="text">
+    <string>OpenFile</string>
+   </property>
+   <property name="toolTip">
+    <string>open file</string>
+   </property>
+  </action>
+  <action name="actionSaveFile">
+   <property name="text">
+    <string>SaveFile</string>
+   </property>
+   <property name="toolTip">
+    <string>save file</string>
+   </property>
+  </action>
+  <action name="actionSelect">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Select</string>
+   </property>
+   <property name="toolTip">
+    <string>select</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
