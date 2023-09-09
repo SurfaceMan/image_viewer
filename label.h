@@ -19,7 +19,7 @@ public:
     virtual void moving(const QPointF &curPos, const QPointF &lastPos);
     virtual void release();
     void         abortCreation();
-    bool         isCreation();
+    bool         isCreation() const;
 
     virtual void modify(const QPointF &pos);
     virtual void rotate(double angleDelta);

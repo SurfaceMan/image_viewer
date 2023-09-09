@@ -47,7 +47,7 @@ QRectF generateRect(const QPointF &a, const QPointF &b) {
     auto left  = delta.x() > 0 ? b.x() : a.x();
     auto top   = delta.y() > 0 ? b.y() : a.y();
 
-    return QRectF(left, top, abs(delta.x()), abs(delta.y()));
+    return {left, top, abs(delta.x()), abs(delta.y())};
 }
 
 bool LabelRect::select(const QPointF &pos) {
@@ -156,8 +156,7 @@ QPen LabelRect::getOutlinePen(const PaintInfo &info) const {
     double width = abs(lineWidth) / info.worldScale;
     QPen   pen(style);
     pen.setColor(color);
-    pen.setWidth(width);
-    pen.setCosmetic(lineWidth < 0);
+    pen.setWidthF(width);
 
     return pen;
 }

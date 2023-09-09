@@ -20,31 +20,8 @@ ImageViewer::ImageViewer(QWidget *parent)
     setBackgroundRole(QPalette::Mid);
     setAutoFillBackground(true);
     setFocusPolicy(Qt::ClickFocus);
-    //setContextMenuPolicy(Qt::CustomContextMenu);
 
     mBackground = QImage(":/mask.png");
-
-    //connect(this, &QWidget::customContextMenuRequested, this, &ImageViewer::showContextMenu);
-}
-
-void ImageViewer::showContextMenu(const QPoint &pos) {
-    if (mSelectedLabelIndex == INVALID_INDEX) {
-        return;
-    }
-
-    if(mLabels[mSelectedLabelIndex]->isCreation()){
-        return;
-    }
-
-    QAction deleteAction(tr("Delete"), this);
-    connect(&deleteAction, &QAction::triggered, [ & ]() { 
-		mLabels.removeAt(mSelectedLabelIndex); 
-		mSelectedLabelIndex = INVALID_INDEX;
-	});
-
-    QMenu menu(this);
-    menu.addAction(&deleteAction);
-    menu.exec(mapToGlobal(pos));
 }
 
 void ImageViewer::initCategory() {
@@ -52,7 +29,6 @@ void ImageViewer::initCategory() {
     rectGood->setColor(Qt::green);
     rectGood->setId(0);
     rectGood->setName("RectGood");
-    rectGood->setType(LabelCategory::TYPE::RECT);
     rectGood->setLineWidth(2);
     mCategories.push_back(rectGood);
 
@@ -60,29 +36,8 @@ void ImageViewer::initCategory() {
     polygon->setColor(Qt::red);
     polygon->setId(1);
     polygon->setName("Polygon");
-    polygon->setType(LabelCategory::TYPE::POLYGON);
     polygon->setLineWidth(2);
     mCategories.push_back(polygon);
-}
-
-void renderCross(QPainter &painter, int size, const QColor &color) {
-    auto oldMode = painter.compositionMode();
-
-    QPoint points[] = {QPoint(0, -size), QPoint(0, size), QPoint(-size, 0), QPoint(size, 0)};
-
-    painter.setCompositionMode(QPainter::RasterOp_NotDestination);
-    painter.setPen(Qt::black);
-    painter.drawLine(points[ 0 ], points[ 1 ]);
-    painter.drawLine(points[ 2 ], points[ 3 ]);
-
-    painter.setCompositionMode(QPainter::CompositionMode_Source);
-    QPen pen(Qt::DotLine);
-    pen.setColor(color);
-    painter.setPen(pen);
-    painter.drawLine(points[ 0 ], points[ 1 ]);
-    painter.drawLine(points[ 2 ], points[ 3 ]);
-
-    painter.setCompositionMode(oldMode);
 }
 
 void ImageViewer::paintEvent(QPaintEvent *event) {
@@ -231,12 +186,12 @@ void ImageViewer::wheelEvent(QWheelEvent *event) {
     update();
 }
 
-void ImageViewer::keyPressEvent(QKeyEvent *event){
+void ImageViewer::keyPressEvent(QKeyEvent *event) {
     if (mImg.isNull()) {
         return;
     }
 
-    if(event->key() == Qt::Key_Delete){
+    if (event->key() == Qt::Key_Delete) {
         if (mSelectedLabelIndex == INVALID_INDEX) {
             return;
         }

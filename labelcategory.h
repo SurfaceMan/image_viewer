@@ -22,21 +22,18 @@ public:
     Q_PROPERTY(int lineWidth READ getLineWidth WRITE setLineWidth NOTIFY lineWidthChanged FINAL);
     Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY
                    descriptionChanged FINAL);
-    Q_PROPERTY(TYPE type READ getType WRITE setType NOTIFY typeChanged FINAL);
 
-    int     getId();
-    QString getName();
-    QColor  getColor();
-    int     getLineWidth();
-    QString getDescription();
-    TYPE    getType();
+    int     getId() const;
+    QString getName() const;
+    QColor  getColor() const;
+    int     getLineWidth() const;
+    QString getDescription() const;
 
     void setId(int id);
     void setName(QString name);
     void setColor(QColor color);
     void setLineWidth(int width);
     void setDescription(QString desc);
-    void setType(TYPE type);
 
 signals:
     void idChanged();
@@ -44,7 +41,6 @@ signals:
     void colorChanged();
     void lineWidthChanged();
     void descriptionChanged();
-    void typeChanged();
 
 private:
     int     id;
@@ -52,7 +48,6 @@ private:
     QColor  color;
     int     lineWidth;
     QString description;
-    TYPE    type;
 
     QList<QSharedPointer<Label>> sharedLabels;
 };

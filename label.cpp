@@ -29,7 +29,7 @@ void Label::abortCreation() {
     mInCreation = false;
 }
 
-bool Label::isCreation() {
+bool Label::isCreation() const {
     return mInCreation;
 }
 

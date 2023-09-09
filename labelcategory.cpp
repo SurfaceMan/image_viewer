@@ -3,28 +3,24 @@
 LabelCategory::LabelCategory(QObject *parent)
     : QObject(parent) {}
 
-int LabelCategory::getId() {
+int LabelCategory::getId() const {
     return id;
 }
 
-QString LabelCategory::getName() {
+QString LabelCategory::getName() const {
     return name;
 }
 
-QColor LabelCategory::getColor() {
+QColor LabelCategory::getColor() const {
     return color;
 }
 
-int LabelCategory::getLineWidth() {
+int LabelCategory::getLineWidth() const {
     return lineWidth;
 }
 
-QString LabelCategory::getDescription() {
+QString LabelCategory::getDescription() const {
     return description;
-}
-
-LabelCategory::TYPE LabelCategory::getType() {
-    return type;
 }
 
 void LabelCategory::setId(int id_) {
@@ -33,7 +29,7 @@ void LabelCategory::setId(int id_) {
 }
 
 void LabelCategory::setName(QString name_) {
-    name = name_;
+    name = std::move(name_);
     emit nameChanged();
 }
 
@@ -48,11 +44,6 @@ void LabelCategory::setLineWidth(int width) {
 }
 
 void LabelCategory::setDescription(QString desc_) {
-    description = desc_;
+    description = std::move(desc_);
     emit descriptionChanged();
-}
-
-void LabelCategory::setType(TYPE type_) {
-    type = type_;
-    emit typeChanged();
 }

@@ -158,8 +158,7 @@ QPen LabelPolygon::getOutlinePen(const PaintInfo &info) const {
     double width = abs(lineWidth) / info.worldScale;
     QPen   pen(style);
     pen.setColor(color);
-    pen.setWidth(width);
-    pen.setCosmetic(lineWidth < 0);
+    pen.setWidthF(width);
 
     return pen;
 }
