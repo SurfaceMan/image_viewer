@@ -28,11 +28,17 @@ public slots:
     void fitToView();
     void resetToOriginalSize();
 
-    void loadImage(const QString &filepath);
-    void setImage(const QImage &img);
+    void         loadImage(const QString &filepath);
+    void         setImage(const QImage &img);
+    const QImage image();
 
     void setInCreation(bool inCreation);
     void setLabelType(LabelCategory::TYPE type);
+    void setInSelect(bool pixelSelect);
+
+    void addLabel(const QSharedPointer<Label> &label);
+    void removeLabel(const QSharedPointer<Label> &label);
+    void clearLabel();
 
 signals:
     void scaleFactorChanged(double factor);
@@ -49,8 +55,6 @@ private:
 
     QPointF getMousePos();
     void    setMousePos(QMouseEvent *);
-
-    void showContextMenu(const QPoint &pos);
 
 private:
     // file model
@@ -77,8 +81,9 @@ private:
     double  mMouseAngle = 0;
 
     // current mode
-    bool                mInCreation = false;
-    LabelCategory::TYPE mLabelType  = LabelCategory::TYPE::RECT;
+    bool                mInCreation    = false;
+    LabelCategory::TYPE mLabelType     = LabelCategory::TYPE::RECT;
+    bool                mInPixelSelect = false;
 
     QImage mBackground;
 };

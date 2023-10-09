@@ -76,18 +76,30 @@ void ImageViewer::mousePressEvent(QMouseEvent *event) {
     }
 
     if (event->button() == Qt::LeftButton && QApplication::keyboardModifiers() == Qt::NoModifier) {
-        mSelectedLabelIndex = INVALID_INDEX;
-        for (int i = 0; i < mLabels.size(); i++) {
-            if (mLabels[ i ]->select(mMousePos)) {
-                mSelectedLabelIndex = i;
+        if (mInPixelSelect) {
+            // check valid position
+            auto pos = mMousePos.toPoint();
+            if (pos.x() >= 0 && pos.x() < mImg.width() && pos.y() >= 0 && pos.y() < mImg.height()) {
+                auto color = mImg.pixelColor(pos);
+                emit pixelValueChanged(pos, color);
+            } else {
+                emit pixelValueChanged(pos, QColor());
             }
-        }
-        if (INVALID_INDEX == mSelectedLabelIndex && mInCreation) {
-            // press in background
-            auto label =
-                LabelFactory::createLabel(mLabelType, mMousePos, mCategories[ int(mLabelType) ]);
-            mLabels.push_back(label);
-            mSelectedLabelIndex = mLabels.size() - 1;
+        } else {
+
+            mSelectedLabelIndex = INVALID_INDEX;
+            for (int i = 0; i < mLabels.size(); i++) {
+                if (mLabels[ i ]->select(mMousePos)) {
+                    mSelectedLabelIndex = i;
+                }
+            }
+            if (INVALID_INDEX == mSelectedLabelIndex && mInCreation) {
+                // press in background
+                auto label = LabelFactory::createLabel(mLabelType, mMousePos,
+                                                       mCategories[ int(mLabelType) ]);
+                mLabels.push_back(label);
+                mSelectedLabelIndex = mLabels.size() - 1;
+            }
         }
 
     } else if (event->button() == Qt::RightButton) {
@@ -315,10 +327,33 @@ void ImageViewer::setImage(const QImage &img_) {
     update();
 }
 
+const QImage ImageViewer::image() {
+    return mImg;
+}
+
 void ImageViewer::setLabelType(LabelCategory::TYPE type) {
     mLabelType = type;
 }
 
+void ImageViewer::addLabel(const QSharedPointer<Label> &label) {
+    mLabels.append(label);
+    update();
+}
+
+void ImageViewer::removeLabel(const QSharedPointer<Label> &label) {
+    mLabels.removeAll(label);
+    update();
+}
+
+void ImageViewer::clearLabel() {
+    mLabels.clear();
+    update();
+}
+
 void ImageViewer::setInCreation(bool inCreation) {
     mInCreation = inCreation;
+}
+
+void ImageViewer::setInSelect(bool pixelSelect) {
+    mInPixelSelect = pixelSelect;
 }
