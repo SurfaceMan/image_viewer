@@ -51,7 +51,7 @@ QRectF generateRect(const QPointF &a, const QPointF &b) {
 }
 
 bool LabelRect::select(const QPointF &pos) {
-    if (!mInCreation) {
+    if (!isCreation()) {
         // press check
         mPressed = mRect.contains(pos);
 
@@ -86,7 +86,7 @@ bool LabelRect::select(const QPointF &pos) {
 
 void LabelRect::moving(const QPointF &curPos, const QPointF &lastPos) {
 
-    if (mInCreation) {
+    if (isCreation()) {
         mRect = generateRect(mRect.topLeft(), curPos);
         return;
     }

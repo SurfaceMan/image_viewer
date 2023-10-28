@@ -45,7 +45,7 @@ void LabelPolygon::deserialize(const QStringList &strs) {}
 
 bool LabelPolygon::select(const QPointF &pos) {
 
-    if (!mInCreation) {
+    if (!isCreation()) {
         // press check
         mPressed = mPolygon.containsPoint(pos, Qt::FillRule::WindingFill);
 
@@ -78,7 +78,7 @@ bool LabelPolygon::select(const QPointF &pos) {
 }
 
 void LabelPolygon::moving(const QPointF &curPos, const QPointF &lastPos) {
-    if (mInCreation) {
+    if (isCreation()) {
         mPolygon[ mPolygon.size() - 1 ] = curPos;
         return;
     }

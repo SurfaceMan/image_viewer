@@ -24,7 +24,7 @@ public:
     virtual void modify(const QPointF &pos);
     virtual void rotate(double angleDelta);
 
-protected:
+private:
     QSharedPointer<LabelCategory> mCategory;
 
     bool mInCreation = true;
