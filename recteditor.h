@@ -3,9 +3,9 @@
 
 #include "labeleditor.h"
 
-class LabelRect : public LabelEditor {
+class RectEditor : public LabelEditor {
 public:
-    LabelRect();
+    RectEditor();
 
     void        onPaint(const PaintInfo &info) override;
     QStringList serialize() const override;

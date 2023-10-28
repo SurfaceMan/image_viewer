@@ -27,10 +27,10 @@ set(PROJECT_SOURCES
         types.h
         labelcategory.h
         labelcategory.cpp
-        labelrect.h
-        labelrect.cpp
-        labelpolygon.h
-        labelpolygon.cpp
+        recteditor.h
+        recteditor.cpp
+        polygoneditor.h
+        polygoneditor.cpp
         labelfactory.h
         utils.h
         utils.cpp

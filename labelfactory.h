@@ -1,8 +1,8 @@
 #ifndef LABELFACTORY_H
 #define LABELFACTORY_H
 
-#include "labelpolygon.h"
-#include "labelrect.h"
+#include "polygoneditor.h"
+#include "recteditor.h"
 
 struct LabelFactory {
     static QSharedPointer<Label> createLabel(LabelCategory::TYPE type, const QPointF &pos,
@@ -11,11 +11,11 @@ struct LabelFactory {
 
         switch (type) {
             case LabelCategory::TYPE::RECT: {
-                label.reset(new LabelRect());
+                label.reset(new RectEditor());
                 break;
             }
             case LabelCategory::TYPE::POLYGON: {
-                label.reset(new LabelPolygon());
+                label.reset(new PolygonEditor());
                 break;
             }
             default:

@@ -4,9 +4,9 @@
 #include "labeleditor.h"
 #include <QPolygon>
 
-class LabelPolygon : public LabelEditor {
+class PolygonEditor : public LabelEditor {
 public:
-    LabelPolygon();
+    PolygonEditor();
 
     void        onPaint(const PaintInfo &info) override;
     QStringList serialize() const override;

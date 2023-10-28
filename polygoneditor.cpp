@@ -1,9 +1,9 @@
-#include "labelpolygon.h"
+#include "polygoneditor.h"
 #include "utils.h"
 
-LabelPolygon::LabelPolygon() {}
+PolygonEditor::PolygonEditor() {}
 
-void LabelPolygon::onPaint(const PaintInfo &info) {
+void PolygonEditor::onPaint(const PaintInfo &info) {
     mHandleDistance = mHandleDistanceBase / info.worldScale;
 
     info.painter->save();
@@ -37,13 +37,13 @@ void LabelPolygon::onPaint(const PaintInfo &info) {
     info.painter->restore();
 }
 
-QStringList LabelPolygon::serialize() const {
+QStringList PolygonEditor::serialize() const {
     return {};
 }
 
-void LabelPolygon::deserialize(const QStringList &strs) {}
+void PolygonEditor::deserialize(const QStringList &strs) {}
 
-bool LabelPolygon::select(const QPointF &pos) {
+bool PolygonEditor::select(const QPointF &pos) {
 
     if (!isCreation()) {
         // press check
@@ -77,7 +77,7 @@ bool LabelPolygon::select(const QPointF &pos) {
     return true;
 }
 
-void LabelPolygon::moving(const QPointF &curPos, const QPointF &lastPos) {
+void PolygonEditor::moving(const QPointF &curPos, const QPointF &lastPos) {
     if (isCreation()) {
         mPolygon[ mPolygon.size() - 1 ] = curPos;
         return;
@@ -107,14 +107,14 @@ void LabelPolygon::moving(const QPointF &curPos, const QPointF &lastPos) {
         mHighLighted = true;
 }
 
-void LabelPolygon::release() {
+void PolygonEditor::release() {
     if (mPressed) {
         mPressed        = false;
         mHandleSelected = false;
     }
 }
 
-void LabelPolygon::modify(const QPointF &pos) {
+void PolygonEditor::modify(const QPointF &pos) {
     if (mHandleHighLighted) {
         // remove handle
         mPolygon.removeAt(mHandleIndex);
@@ -138,7 +138,7 @@ void LabelPolygon::modify(const QPointF &pos) {
     }
 }
 
-QPen LabelPolygon::getOutlinePen(const PaintInfo &info) const {
+QPen PolygonEditor::getOutlinePen(const PaintInfo &info) const {
     auto def = getCategory();
     if (!def) {
         return {};

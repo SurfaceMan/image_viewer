@@ -1,9 +1,9 @@
-#include "labelrect.h"
+#include "recteditor.h"
 #include "utils.h"
 
-LabelRect::LabelRect() {}
+RectEditor::RectEditor() {}
 
-void LabelRect::onPaint(const PaintInfo &info) {
+void RectEditor::onPaint(const PaintInfo &info) {
     mHandleDistance = mHandleDistanceBase / info.worldScale;
 
     info.painter->save();
@@ -36,11 +36,11 @@ void LabelRect::onPaint(const PaintInfo &info) {
     info.painter->restore();
 }
 
-QStringList LabelRect::serialize() const {
+QStringList RectEditor::serialize() const {
     return {};
 }
 
-void LabelRect::deserialize(const QStringList &strs) {}
+void RectEditor::deserialize(const QStringList &strs) {}
 
 QRectF generateRect(const QPointF &a, const QPointF &b) {
     auto delta = a - b;
@@ -50,7 +50,7 @@ QRectF generateRect(const QPointF &a, const QPointF &b) {
     return {left, top, abs(delta.x()), abs(delta.y())};
 }
 
-bool LabelRect::select(const QPointF &pos) {
+bool RectEditor::select(const QPointF &pos) {
     if (!isCreation()) {
         // press check
         mPressed = mRect.contains(pos);
@@ -84,7 +84,7 @@ bool LabelRect::select(const QPointF &pos) {
     return true;
 }
 
-void LabelRect::moving(const QPointF &curPos, const QPointF &lastPos) {
+void RectEditor::moving(const QPointF &curPos, const QPointF &lastPos) {
 
     if (isCreation()) {
         mRect = generateRect(mRect.topLeft(), curPos);
@@ -129,14 +129,14 @@ void LabelRect::moving(const QPointF &curPos, const QPointF &lastPos) {
         mHighLighted = true;
 }
 
-void LabelRect::release() {
+void RectEditor::release() {
     if (mPressed) {
         mPressed        = false;
         mHandleSelected = false;
     }
 }
 
-QPen LabelRect::getOutlinePen(const PaintInfo &info) const {
+QPen RectEditor::getOutlinePen(const PaintInfo &info) const {
     auto def = getCategory();
     if (!def) {
         return {};
