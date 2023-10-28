@@ -23,7 +23,8 @@ struct LabelFactory {
         }
 
         if (label) {
-            label->select(pos);
+            auto *editor = dynamic_cast<LabelEditor *>(label.get());
+            editor->select(pos);
             label->setCategory(category);
         }
 

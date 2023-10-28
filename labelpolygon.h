@@ -1,10 +1,10 @@
 #ifndef LABELPOLYGON_H
 #define LABELPOLYGON_H
 
-#include "label.h"
+#include "labeleditor.h"
 #include <QPolygon>
 
-class LabelPolygon : public Label {
+class LabelPolygon : public LabelEditor {
 public:
     LabelPolygon();
 

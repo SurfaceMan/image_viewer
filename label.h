@@ -15,19 +15,8 @@ public:
     virtual QStringList serialize() const;
     virtual void        deserialize(const QStringList &strs);
 
-    virtual bool select(const QPointF &pos);
-    virtual void moving(const QPointF &curPos, const QPointF &lastPos);
-    virtual void release();
-    void         abortCreation();
-    bool         isCreation() const;
-
-    virtual void modify(const QPointF &pos);
-    virtual void rotate(double angleDelta);
-
 private:
     QSharedPointer<LabelCategory> mCategory;
-
-    bool mInCreation = true;
 };
 
 #endif // LABEL_H

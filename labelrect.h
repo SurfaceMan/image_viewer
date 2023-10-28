@@ -1,9 +1,9 @@
 #ifndef LABELRECT_H
 #define LABELRECT_H
 
-#include "label.h"
+#include "labeleditor.h"
 
-class LabelRect : public Label {
+class LabelRect : public LabelEditor {
 public:
     LabelRect();
 

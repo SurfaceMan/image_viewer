@@ -15,24 +15,3 @@ QStringList Label::serialize() const {
 void Label::deserialize(const QStringList &strs) {
     Q_UNUSED(strs);
 }
-
-bool Label::select(const QPointF &pos) {
-    Q_UNUSED(pos)
-    return false;
-}
-
-void Label::moving(const QPointF &curPos, const QPointF &lastPos) {}
-
-void Label::release() {}
-
-void Label::abortCreation() {
-    mInCreation = false;
-}
-
-bool Label::isCreation() const {
-    return mInCreation;
-}
-
-void Label::modify(const QPointF &pos) {}
-
-void Label::rotate(double angleDelta) {}

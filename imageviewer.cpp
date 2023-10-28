@@ -1,5 +1,5 @@
 #include "imageviewer.h"
-#include "label.h"
+#include "labeleditor.h"
 #include "labelfactory.h"
 #include "types.h"
 
@@ -11,6 +11,7 @@
 #include <QMouseEvent>
 #include <QPainter>
 #include <QWheelEvent>
+#include <limits>
 
 ImageViewer::ImageViewer(QWidget *parent)
     : QWidget{parent} {
@@ -86,11 +87,15 @@ void ImageViewer::mousePressEvent(QMouseEvent *event) {
                 emit pixelValueChanged(pos, QColor());
             }
         } else {
-
+            auto pos            = mMousePos;
             mSelectedLabelIndex = INVALID_INDEX;
             for (int i = 0; i < mLabels.size(); i++) {
-                if (mLabels[ i ]->select(mMousePos)) {
+                auto *editor = dynamic_cast<LabelEditor *>(mLabels[ i ].get());
+                if (nullptr != editor && editor->select(pos)) {
                     mSelectedLabelIndex = i;
+
+                    // unselect other label
+                    pos.setX(std::numeric_limits<float>::max());
                 }
             }
             if (INVALID_INDEX == mSelectedLabelIndex && mInCreation) {
@@ -120,20 +125,17 @@ void ImageViewer::mouseReleaseEvent(QMouseEvent *event) {
         return;
     }
 
-    auto selectLabel = mLabels[ mSelectedLabelIndex ];
-
+    auto *editor = dynamic_cast<LabelEditor *>(mLabels[ mSelectedLabelIndex ].get());
     if (event->button() == Qt::LeftButton) {
-        foreach (auto label, mLabels) {
-            label->release();
-        }
+        editor->release();
     } else if (event->button() == Qt::RightButton) {
-        if (selectLabel->isCreation()) {
+        if (editor->isCreation()) {
             // abort creation
-            selectLabel->abortCreation();
+            editor->abortCreation();
             // mSelectedLabelIndex = INVALID_INDEX;
         } else {
             // modify
-            selectLabel->modify(mMousePos);
+            editor->modify(mMousePos);
         }
     }
 
@@ -153,12 +155,16 @@ void ImageViewer::mouseMoveEvent(QMouseEvent *event) {
 
     if (event->buttons() == Qt::NoButton) {
         foreach (auto label, mLabels) {
-            label->moving(mMousePos, oldMousePos);
+            auto *editor = dynamic_cast<LabelEditor *>(label.get());
+            if (nullptr != editor) {
+                editor->moving(mMousePos, oldMousePos);
+            }
         }
     }
 
     if (mSelectedLabelIndex != INVALID_INDEX && (event->buttons() & Qt::LeftButton)) {
-        mLabels[ mSelectedLabelIndex ]->moving(mMousePos, oldMousePos);
+        auto *editor = dynamic_cast<LabelEditor *>(mLabels[ mSelectedLabelIndex ].get());
+        editor->moving(mMousePos, oldMousePos);
         update();
         return;
     }

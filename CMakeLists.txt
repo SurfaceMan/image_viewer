@@ -22,6 +22,8 @@ set(PROJECT_SOURCES
         imageviewer.cpp
         label.h
         label.cpp
+        labeleditor.h
+        labeleditor.cpp
         types.h
         labelcategory.h
         labelcategory.cpp
