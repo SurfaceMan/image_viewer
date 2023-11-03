@@ -104,15 +104,15 @@ MainWindow::MainWindow(QWidget *parent)
         category->setColor(Qt::green);
         category->setLineWidth(2);
 
-        QSharedPointer<Label> label;
+        QSharedPointer<LabelEditor> editor;
         if (action == mUi->actionDrawRect) {
-            label.reset(new RectEditor);
-            label->setCategory(category);
+            editor.reset(new RectEditor);
+            editor->setCategory(category);
         } else if (action == mUi->actionDrawPolygon) {
-            label.reset(new PolygonEditor);
-            label->setCategory(category);
+            editor.reset(new PolygonEditor);
+            editor->setCategory(category);
         }
-        mViewer->addLabel(label);
+        mViewer->addEditor(editor);
     });
     connect(mUi->actionPixelPicker, &QAction::triggered, mViewer, &ImageViewer::setInSelect);
 }

@@ -47,8 +47,11 @@ void ImageViewer::paintEvent(QPaintEvent *event) {
     PaintInfo info;
     info.painter    = &painter;
     info.worldScale = getWorldScale();
-    foreach (auto label, mLabels) {
+    foreach (auto &label, mLabels) {
         label->onPaint(info);
+    }
+    foreach (auto &editor, mEditors) {
+        editor->onPaint(info);
     }
 }
 
@@ -70,12 +73,11 @@ void ImageViewer::mousePressEvent(QMouseEvent *event) {
                 emit pixelValueChanged(pos, QColor());
             }
         } else {
-            auto pos            = mMousePos;
-            mSelectedLabelIndex = INVALID_INDEX;
-            for (int i = 0; i < mLabels.size(); i++) {
-                auto *editor = dynamic_cast<LabelEditor *>(mLabels[ i ].get());
-                if (nullptr != editor && editor->select(pos)) {
-                    mSelectedLabelIndex = i;
+            auto pos             = mMousePos;
+            mSelectedEditorIndex = INVALID_INDEX;
+            for (int i = 0; i < mEditors.size(); i++) {
+                if (mEditors[ i ]->select(pos)) {
+                    mSelectedEditorIndex = i;
 
                     // unselect other label
                     pos.setX(std::numeric_limits<float>::max());
@@ -97,18 +99,18 @@ void ImageViewer::mouseReleaseEvent(QMouseEvent *event) {
         return;
     }
 
-    if (mSelectedLabelIndex == INVALID_INDEX) {
+    if (mSelectedEditorIndex == INVALID_INDEX) {
         return;
     }
 
-    auto *editor = dynamic_cast<LabelEditor *>(mLabels[ mSelectedLabelIndex ].get());
+    auto &editor = mEditors[ mSelectedEditorIndex ];
     if (event->button() == Qt::LeftButton) {
         editor->release();
     } else if (event->button() == Qt::RightButton) {
         if (editor->isCreation()) {
             // abort creation
             editor->abortCreation();
-            // mSelectedLabelIndex = INVALID_INDEX;
+            // mSelectedEditorIndex = INVALID_INDEX;
         } else {
             // modify
             editor->modify(mMousePos);
@@ -129,18 +131,15 @@ void ImageViewer::mouseMoveEvent(QMouseEvent *event) {
         return;
     }
 
+    // hightlight
     if (event->buttons() == Qt::NoButton) {
-        foreach (auto label, mLabels) {
-            auto *editor = dynamic_cast<LabelEditor *>(label.get());
-            if (nullptr != editor) {
-                editor->moving(mMousePos, oldMousePos);
-            }
+        foreach (auto editor, mEditors) {
+            editor->moving(mMousePos, oldMousePos);
         }
     }
 
-    if (mSelectedLabelIndex != INVALID_INDEX && (event->buttons() & Qt::LeftButton)) {
-        auto *editor = dynamic_cast<LabelEditor *>(mLabels[ mSelectedLabelIndex ].get());
-        editor->moving(mMousePos, oldMousePos);
+    if (mSelectedEditorIndex != INVALID_INDEX && (event->buttons() & Qt::LeftButton)) {
+        mEditors[ mSelectedEditorIndex ]->moving(mMousePos, oldMousePos);
         update();
         return;
     }
@@ -186,12 +185,12 @@ void ImageViewer::keyPressEvent(QKeyEvent *event) {
     }
 
     if (event->key() == Qt::Key_Delete) {
-        if (mSelectedLabelIndex == INVALID_INDEX) {
+        if (mSelectedEditorIndex == INVALID_INDEX) {
             return;
         }
 
-        mLabels.removeAt(mSelectedLabelIndex);
-        mSelectedLabelIndex = INVALID_INDEX;
+        mEditors.removeAt(mSelectedEditorIndex);
+        mSelectedEditorIndex = INVALID_INDEX;
     }
 
     update();
@@ -309,11 +308,15 @@ void ImageViewer::setImage(const QImage &img_) {
     update();
 }
 
-const QImage ImageViewer::image() {
+QImage ImageViewer::image() const {
     return mImg;
 }
 
 void ImageViewer::addLabel(const QSharedPointer<Label> &label) {
+    if (!label) {
+        return;
+    }
+
     mLabels.append(label);
     update();
 }
@@ -325,6 +328,25 @@ void ImageViewer::removeLabel(const QSharedPointer<Label> &label) {
 
 void ImageViewer::clearLabel() {
     mLabels.clear();
+    update();
+}
+
+void ImageViewer::addEditor(const QSharedPointer<LabelEditor> &editor) {
+    if (!editor) {
+        return;
+    }
+
+    mEditors.append(editor);
+    update();
+}
+
+void ImageViewer::removeEditor(const QSharedPointer<LabelEditor> &editor) {
+    mEditors.removeAll(editor);
+    update();
+}
+
+void ImageViewer::clearEditor() {
+    mEditors.clear();
     update();
 }
 

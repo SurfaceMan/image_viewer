@@ -29,15 +29,19 @@ public slots:
     void fitToView();
     void resetToOriginalSize();
 
-    void         loadImage(const QString &filepath);
-    void         setImage(const QImage &img);
-    const QImage image();
+    void   loadImage(const QString &filepath);
+    void   setImage(const QImage &img);
+    QImage image() const;
 
     void setInSelect(bool pixelSelect);
 
     void addLabel(const QSharedPointer<Label> &label);
     void removeLabel(const QSharedPointer<Label> &label);
     void clearLabel();
+
+    void addEditor(const QSharedPointer<LabelEditor> &editor);
+    void removeEditor(const QSharedPointer<LabelEditor> &editor);
+    void clearEditor();
 
 signals:
     void scaleFactorChanged(double factor);
@@ -56,10 +60,12 @@ private:
 
 private:
     // file model
-    const int                    INVALID_INDEX = -1;
-    QImage                       mImg;
-    QList<QSharedPointer<Label>> mLabels;
-    int                          mSelectedLabelIndex = INVALID_INDEX;
+    const int INVALID_INDEX = -1;
+    QImage    mImg;
+    int       mSelectedEditorIndex = INVALID_INDEX;
+
+    QList<QSharedPointer<LabelEditor>> mEditors;
+    QList<QSharedPointer<Label>>       mLabels;
 
     // scale and transform of the objects on the desktop
     double       mWorldScale        = 1;
