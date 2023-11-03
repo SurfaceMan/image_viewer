@@ -13,27 +13,27 @@ class LabelCategory : public QObject {
 public:
     explicit LabelCategory(QObject *parent = nullptr);
 
-    enum class TYPE : int { RECT, POLYGON };
-    Q_ENUM(TYPE)
+    Q_PROPERTY(int id READ id WRITE setId NOTIFY idChanged FINAL);
+    Q_PROPERTY(QString name READ name WRITE setName NOTIFY nameChanged FINAL);
+    Q_PROPERTY(QColor color READ color WRITE setColor NOTIFY colorChanged FINAL);
+    Q_PROPERTY(int lineWidth READ lineWidth WRITE setLineWidth NOTIFY lineWidthChanged FINAL);
+    Q_PROPERTY(
+        QString description READ description WRITE setDescription NOTIFY descriptionChanged FINAL);
+    Q_PROPERTY(bool visiable READ visiable WRITE setVisiable NOTIFY visiableChanged FINAL);
 
-    Q_PROPERTY(int id READ getId WRITE setId NOTIFY idChanged FINAL);
-    Q_PROPERTY(QString name READ getName WRITE setName NOTIFY nameChanged FINAL);
-    Q_PROPERTY(QColor color READ getColor WRITE setColor NOTIFY colorChanged FINAL);
-    Q_PROPERTY(int lineWidth READ getLineWidth WRITE setLineWidth NOTIFY lineWidthChanged FINAL);
-    Q_PROPERTY(QString description READ getDescription WRITE setDescription NOTIFY
-                   descriptionChanged FINAL);
-
-    int     getId() const;
-    QString getName() const;
-    QColor  getColor() const;
-    int     getLineWidth() const;
-    QString getDescription() const;
+    int     id() const;
+    QString name() const;
+    QColor  color() const;
+    int     lineWidth() const;
+    QString description() const;
+    bool    visiable() const;
 
     void setId(int id);
     void setName(QString name);
     void setColor(QColor color);
     void setLineWidth(int width);
     void setDescription(QString desc);
+    void setVisiable(bool visiable);
 
 signals:
     void idChanged();
@@ -41,15 +41,15 @@ signals:
     void colorChanged();
     void lineWidthChanged();
     void descriptionChanged();
+    void visiableChanged();
 
 private:
-    int     id;
-    QString name;
-    QColor  color;
-    int     lineWidth;
-    QString description;
-
-    QList<QSharedPointer<Label>> sharedLabels;
+    int     mId;
+    QString mName;
+    QColor  mColor;
+    int     mLineWidth;
+    QString mDescription;
+    bool    mVisiable;
 };
 
 #endif // LABELCATEGORY_H

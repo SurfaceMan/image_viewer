@@ -4,7 +4,7 @@ void Label::setCategory(QSharedPointer<LabelCategory> category) {
     mCategory = category;
 }
 
-QSharedPointer<LabelCategory> Label::getCategory() const {
+QSharedPointer<LabelCategory> Label::category() const {
     return mCategory;
 }
 

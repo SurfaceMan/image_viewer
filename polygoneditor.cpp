@@ -11,13 +11,13 @@ void PolygonEditor::onPaint(const PaintInfo &info) {
     auto pen = getOutlinePen(info);
     info.painter->setPen(pen);
 
-    auto def   = getCategory();
-    auto color = def->getColor();
+    auto def   = category();
+    auto color = def->color();
     color.setAlpha(50);
     info.painter->setBrush(QBrush(color));
     info.painter->drawPolygon(mPolygon);
 
-    auto handleRadius = def->getLineWidth() * 2. / info.worldScale;
+    auto handleRadius = def->lineWidth() * 2. / info.worldScale;
 
     if (mSelected || mHighLighted) {
         if (mSelected) {
@@ -154,13 +154,13 @@ void PolygonEditor::setPolygon(const QPolygonF &value) {
 }
 
 QPen PolygonEditor::getOutlinePen(const PaintInfo &info) const {
-    auto def = getCategory();
+    auto def = category();
     if (!def) {
         return {};
     }
 
-    auto color     = def->getColor();
-    auto lineWidth = def->getLineWidth();
+    auto color     = def->color();
+    auto lineWidth = def->lineWidth();
     auto style     = Qt::SolidLine;
 
     if (mSelected) {

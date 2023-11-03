@@ -9,7 +9,7 @@ public:
     virtual ~Label() = default;
 
     void                          setCategory(QSharedPointer<LabelCategory> category);
-    QSharedPointer<LabelCategory> getCategory() const;
+    QSharedPointer<LabelCategory> category() const;
 
     virtual void        onPaint(const PaintInfo &info) = 0;
     virtual QStringList serialize() const;

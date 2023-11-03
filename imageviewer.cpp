@@ -1,6 +1,4 @@
 #include "imageviewer.h"
-#include "labeleditor.h"
-#include "labelfactory.h"
 #include "types.h"
 
 #include <QAction>
@@ -48,9 +46,15 @@ void ImageViewer::paintEvent(QPaintEvent *event) {
     info.painter    = &painter;
     info.worldScale = getWorldScale();
     foreach (auto &label, mLabels) {
+        if (label->category() && !label->category()->visiable()) {
+            continue;
+        }
         label->onPaint(info);
     }
     foreach (auto &editor, mEditors) {
+        if (editor->category() && !editor->category()->visiable()) {
+            continue;
+        }
         editor->onPaint(info);
     }
 }

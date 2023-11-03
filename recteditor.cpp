@@ -12,8 +12,8 @@ void RectEditor::onPaint(const PaintInfo &info) {
     info.painter->setPen(pen);
     info.painter->drawRect(mRect);
 
-    auto def          = getCategory();
-    auto handleRadius = def->getLineWidth() * 2. / info.worldScale;
+    auto def          = category();
+    auto handleRadius = def->lineWidth() * 2. / info.worldScale;
 
     if (mSelected || mHighLighted) {
         if (mSelected) {
@@ -151,13 +151,13 @@ void RectEditor::setRect(const QRectF &value) {
 }
 
 QPen RectEditor::getOutlinePen(const PaintInfo &info) const {
-    auto def = getCategory();
+    auto def = category();
     if (!def) {
         return {};
     }
 
-    auto color     = def->getColor();
-    auto lineWidth = def->getLineWidth();
+    auto color     = def->color();
+    auto lineWidth = def->lineWidth();
     auto style     = Qt::SolidLine;
 
     if (mSelected) {

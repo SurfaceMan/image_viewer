@@ -3,47 +3,56 @@
 LabelCategory::LabelCategory(QObject *parent)
     : QObject(parent) {}
 
-int LabelCategory::getId() const {
-    return id;
+int LabelCategory::id() const {
+    return mId;
 }
 
-QString LabelCategory::getName() const {
-    return name;
+QString LabelCategory::name() const {
+    return mName;
 }
 
-QColor LabelCategory::getColor() const {
-    return color;
+QColor LabelCategory::color() const {
+    return mColor;
 }
 
-int LabelCategory::getLineWidth() const {
-    return lineWidth;
+int LabelCategory::lineWidth() const {
+    return mLineWidth;
 }
 
-QString LabelCategory::getDescription() const {
-    return description;
+QString LabelCategory::description() const {
+    return mDescription;
+}
+
+bool LabelCategory::visiable() const {
+    return mVisiable;
 }
 
 void LabelCategory::setId(int id_) {
-    id = id_;
+    mId = id_;
     emit idChanged();
 }
 
 void LabelCategory::setName(QString name_) {
-    name = std::move(name_);
+    mName = std::move(name_);
     emit nameChanged();
 }
 
 void LabelCategory::setColor(QColor color_) {
-    color = color_;
+    mColor = color_;
     emit colorChanged();
 }
 
 void LabelCategory::setLineWidth(int width) {
-    lineWidth = width;
+    mLineWidth = width;
     emit lineWidthChanged();
 }
 
 void LabelCategory::setDescription(QString desc_) {
-    description = std::move(desc_);
+    mDescription = std::move(desc_);
     emit descriptionChanged();
+}
+
+void LabelCategory::setVisiable(bool visiable) {
+    mVisiable = visiable;
+    emit visiableChanged();
 }
