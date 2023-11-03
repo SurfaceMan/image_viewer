@@ -31,7 +31,6 @@ set(PROJECT_SOURCES
         recteditor.cpp
         polygoneditor.h
         polygoneditor.cpp
-        labelfactory.h
         utils.h
         utils.cpp
 )
