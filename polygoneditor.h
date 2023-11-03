@@ -17,6 +17,9 @@ public:
     void release() override;
     void modify(const QPointF &pos) override;
 
+    QPolygonF polygon() const;
+    void      setPolygon(const QPolygonF &value);
+
     QPen getOutlinePen(const PaintInfo &info) const;
 
 private:

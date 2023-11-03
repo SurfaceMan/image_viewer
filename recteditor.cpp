@@ -85,6 +85,9 @@ bool RectEditor::select(const QPointF &pos) {
 }
 
 void RectEditor::moving(const QPointF &curPos, const QPointF &lastPos) {
+    if (mRect.isNull()) {
+        return;
+    }
 
     if (isCreation()) {
         mRect = generateRect(mRect.topLeft(), curPos);
@@ -133,6 +136,17 @@ void RectEditor::release() {
     if (mPressed) {
         mPressed        = false;
         mHandleSelected = false;
+    }
+}
+
+QRectF RectEditor::rect() const {
+    return mRect;
+}
+
+void RectEditor::setRect(const QRectF &value) {
+    mRect = value;
+    if (!mRect.isNull()) {
+        abortCreation();
     }
 }
 

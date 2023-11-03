@@ -78,6 +78,10 @@ bool PolygonEditor::select(const QPointF &pos) {
 }
 
 void PolygonEditor::moving(const QPointF &curPos, const QPointF &lastPos) {
+    if (mPolygon.empty()) {
+        return;
+    }
+
     if (isCreation()) {
         mPolygon[ mPolygon.size() - 1 ] = curPos;
         return;
@@ -135,6 +139,17 @@ void PolygonEditor::modify(const QPointF &pos) {
             mPolygon.insert(i + 1, pos);
             break;
         }
+    }
+}
+
+QPolygonF PolygonEditor::polygon() const {
+    return mPolygon;
+}
+
+void PolygonEditor::setPolygon(const QPolygonF &value) {
+    mPolygon = value;
+    if (!mPolygon.empty()) {
+        abortCreation();
     }
 }
 

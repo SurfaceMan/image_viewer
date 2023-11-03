@@ -15,6 +15,9 @@ public:
     void moving(const QPointF &curPos, const QPointF &lastPos) override;
     void release() override;
 
+    QRectF rect() const;
+    void   setRect(const QRectF &value);
+
     QPen getOutlinePen(const PaintInfo &info) const;
 
 private:
