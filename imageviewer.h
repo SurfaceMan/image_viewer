@@ -4,7 +4,8 @@
 #include <QImage>
 #include <QWidget>
 
-#include "labelcategory.h"
+#include "label.h"
+#include "labeleditor.h"
 
 class ImageViewer : public QWidget {
     Q_OBJECT
@@ -32,8 +33,6 @@ public slots:
     void         setImage(const QImage &img);
     const QImage image();
 
-    void setInCreation(bool inCreation);
-    void setLabelType(LabelCategory::TYPE type);
     void setInSelect(bool pixelSelect);
 
     void addLabel(const QSharedPointer<Label> &label);
@@ -51,18 +50,16 @@ private:
     void       setWorldScale(double value);
     double     getWorldScale() const;
     void       setWorldScaleAndUpdate(double value);
-    void       initCategory();
 
     QPointF getMousePos();
     void    setMousePos(QMouseEvent *);
 
 private:
     // file model
-    const int                            INVALID_INDEX = -1;
-    QImage                               mImg;
-    QList<QSharedPointer<Label>>         mLabels;
-    int                                  mSelectedLabelIndex = INVALID_INDEX;
-    QList<QSharedPointer<LabelCategory>> mCategories;
+    const int                    INVALID_INDEX = -1;
+    QImage                       mImg;
+    QList<QSharedPointer<Label>> mLabels;
+    int                          mSelectedLabelIndex = INVALID_INDEX;
 
     // scale and transform of the objects on the desktop
     double       mWorldScale        = 1;
@@ -81,9 +78,7 @@ private:
     double  mMouseAngle = 0;
 
     // current mode
-    bool                mInCreation    = false;
-    LabelCategory::TYPE mLabelType     = LabelCategory::TYPE::RECT;
-    bool                mInPixelSelect = false;
+    bool mInPixelSelect = false;
 
     QImage mBackground;
 };

@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "polygoneditor.h"
+#include "recteditor.h"
 
 #include <QAction>
 #include <QActionGroup>
@@ -96,15 +98,21 @@ MainWindow::MainWindow(QWidget *parent)
     connect(mUi->actionScaleUp, &QAction::triggered, mViewer, &ImageViewer::zoomIn);
     connect(mUi->actionScaleDown, &QAction::triggered, mViewer, &ImageViewer::zoomOut);
     connect(labelGroup, &QActionGroup::triggered, [ & ](QAction *action) {
-        if (action == mUi->actionSelect) {
-            mViewer->setInCreation(false);
-        } else if (action == mUi->actionDrawRect) {
-            mViewer->setInCreation(true);
-            mViewer->setLabelType(LabelCategory::TYPE::RECT);
+        QSharedPointer<LabelCategory> category(new LabelCategory);
+        category->setId(0);
+        category->setName("GOOD");
+        category->setColor(Qt::green);
+        category->setLineWidth(2);
+
+        QSharedPointer<Label> label;
+        if (action == mUi->actionDrawRect) {
+            label.reset(new RectEditor);
+            label->setCategory(category);
         } else if (action == mUi->actionDrawPolygon) {
-            mViewer->setInCreation(true);
-            mViewer->setLabelType(LabelCategory::TYPE::POLYGON);
+            label.reset(new PolygonEditor);
+            label->setCategory(category);
         }
+        mViewer->addLabel(label);
     });
     connect(mUi->actionPixelPicker, &QAction::triggered, mViewer, &ImageViewer::setInSelect);
 }

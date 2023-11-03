@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>887</width>
-     <height>25</height>
+     <height>24</height>
     </rect>
    </property>
   </widget>
@@ -53,9 +53,6 @@
    <addaction name="actionPixelPicker"/>
   </widget>
   <action name="actionDrawRect">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
    <property name="text">
     <string>DrawRect</string>
    </property>
@@ -64,9 +61,6 @@
    </property>
   </action>
   <action name="actionDrawPolygon">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
    <property name="text">
     <string>DrawPolygon</string>
    </property>
@@ -134,9 +128,6 @@
    </property>
   </action>
   <action name="actionSelect">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
    <property name="text">
     <string>Select</string>
    </property>

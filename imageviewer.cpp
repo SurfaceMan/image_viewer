@@ -16,29 +16,12 @@
 ImageViewer::ImageViewer(QWidget *parent)
     : QWidget{parent} {
     setMouseTracking(true);
-    initCategory();
 
     setBackgroundRole(QPalette::Mid);
     setAutoFillBackground(true);
     setFocusPolicy(Qt::ClickFocus);
 
     mBackground = QImage(":/mask.png");
-}
-
-void ImageViewer::initCategory() {
-    QSharedPointer<LabelCategory> rectGood(new LabelCategory());
-    rectGood->setColor(Qt::green);
-    rectGood->setId(0);
-    rectGood->setName("RectGood");
-    rectGood->setLineWidth(2);
-    mCategories.push_back(rectGood);
-
-    QSharedPointer<LabelCategory> polygon(new LabelCategory());
-    polygon->setColor(Qt::red);
-    polygon->setId(1);
-    polygon->setName("Polygon");
-    polygon->setLineWidth(2);
-    mCategories.push_back(polygon);
 }
 
 void ImageViewer::paintEvent(QPaintEvent *event) {
@@ -97,13 +80,6 @@ void ImageViewer::mousePressEvent(QMouseEvent *event) {
                     // unselect other label
                     pos.setX(std::numeric_limits<float>::max());
                 }
-            }
-            if (INVALID_INDEX == mSelectedLabelIndex && mInCreation) {
-                // press in background
-                auto label = LabelFactory::createLabel(mLabelType, mMousePos,
-                                                       mCategories[ int(mLabelType) ]);
-                mLabels.push_back(label);
-                mSelectedLabelIndex = mLabels.size() - 1;
             }
         }
 
@@ -337,10 +313,6 @@ const QImage ImageViewer::image() {
     return mImg;
 }
 
-void ImageViewer::setLabelType(LabelCategory::TYPE type) {
-    mLabelType = type;
-}
-
 void ImageViewer::addLabel(const QSharedPointer<Label> &label) {
     mLabels.append(label);
     update();
@@ -354,10 +326,6 @@ void ImageViewer::removeLabel(const QSharedPointer<Label> &label) {
 void ImageViewer::clearLabel() {
     mLabels.clear();
     update();
-}
-
-void ImageViewer::setInCreation(bool inCreation) {
-    mInCreation = inCreation;
 }
 
 void ImageViewer::setInSelect(bool pixelSelect) {
