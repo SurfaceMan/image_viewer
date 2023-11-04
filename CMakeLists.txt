@@ -27,18 +27,18 @@ set(PROJECT_SOURCES
         types.h
         labelcategory.h
         labelcategory.cpp
-        circleeditor.h
-        circleeditor.cpp
-        ringeditor.h
-        ringeditor.cpp
-        rotatedrecteditor.h
-        rotatedrecteditor.cpp
-        recteditor.h
-        recteditor.cpp
-        polygoneditor.h
-        polygoneditor.cpp
         utils.h
         utils.cpp
+        editor/circleeditor.h
+        editor/circleeditor.cpp
+        editor/ringeditor.h
+        editor/ringeditor.cpp
+        editor/rotatedrecteditor.h
+        editor/rotatedrecteditor.cpp
+        editor/recteditor.h
+        editor/recteditor.cpp
+        editor/polygoneditor.h
+        editor/polygoneditor.cpp       
 )
 
 add_executable(viewer
@@ -46,6 +46,7 @@ add_executable(viewer
     res/resource.qrc
 )
 
+target_include_directories(viewer PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(viewer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
 include(GNUInstallDirs)

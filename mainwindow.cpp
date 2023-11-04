@@ -1,10 +1,10 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-#include "circleeditor.h"
-#include "polygoneditor.h"
-#include "recteditor.h"
-#include "ringeditor.h"
-#include "rotatedrecteditor.h"
+#include "editor/circleeditor.h"
+#include "editor/polygoneditor.h"
+#include "editor/recteditor.h"
+#include "editor/ringeditor.h"
+#include "editor/rotatedrecteditor.h"
 
 #include <QAction>
 #include <QActionGroup>
