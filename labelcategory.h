@@ -46,10 +46,10 @@ signals:
 private:
     int     mId;
     QString mName;
-    QColor  mColor;
-    int     mLineWidth;
+    QColor  mColor     = Qt::green;
+    int     mLineWidth = 2;
     QString mDescription;
-    bool    mVisiable;
+    bool    mVisiable = true;
 };
 
 #endif // LABELCATEGORY_H
