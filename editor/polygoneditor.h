@@ -1,5 +1,5 @@
-#ifndef LABELPOLYGON_H
-#define LABELPOLYGON_H
+#ifndef POLYGONEDITOR_H
+#define POLYGONEDITOR_H
 
 #include "labeleditor.h"
 #include <QPolygon>
@@ -36,4 +36,4 @@ private:
     bool mHandleHighLighted = false;
 };
 
-#endif // LABELPOLYGON_H
+#endif // POLYGONEDITOR_H

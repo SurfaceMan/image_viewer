@@ -1,5 +1,5 @@
-#ifndef LABELRECT_H
-#define LABELRECT_H
+#ifndef RECTEDITOR_H
+#define RECTEDITOR_H
 
 #include "labeleditor.h"
 
@@ -37,4 +37,4 @@ private:
     bool mHandleHighLighted = false;
 };
 
-#endif // LABELRECT_H
+#endif // RECTEDITOR_H
