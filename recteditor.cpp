@@ -5,13 +5,31 @@ RectEditor::RectEditor() {}
 
 void RectEditor::onPaint(const PaintInfo &info) {
     mHandleDistance = mHandleDistanceBase / info.worldScale;
+    mCrossLength    = mCrossLengthBase / info.worldScale;
 
     info.painter->save();
 
+    // rect
     auto pen = getOutlinePen(info);
     info.painter->setPen(pen);
     info.painter->drawRect(mRect);
 
+    // center cross
+    auto halfCrossLength = mCrossLength / 2.;
+    auto center          = mRect.center();
+    auto style           = pen.style();
+    pen.setStyle(Qt::SolidLine);
+    info.painter->setPen(pen);
+    info.painter->drawLines({
+        QPointF(center.x(), center.y() - halfCrossLength),
+        QPointF(center.x(), center.y() + halfCrossLength),
+        QPointF(center.x() - halfCrossLength, center.y()),
+        QPointF(center.x() + halfCrossLength, center.y()),
+    });
+    pen.setStyle(style);
+    info.painter->setPen(pen);
+
+    // handle
     auto def          = category();
     auto handleRadius = def->lineWidth() * 2. / info.worldScale;
 
@@ -86,6 +104,7 @@ bool RectEditor::select(const QPointF &pos) {
 
 void RectEditor::moving(const QPointF &curPos, const QPointF &lastPos) {
     if (mRect.isNull()) {
+        mRect.moveTopLeft(curPos);
         return;
     }
 

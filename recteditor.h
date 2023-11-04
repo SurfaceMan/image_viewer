@@ -27,6 +27,8 @@ private:
 
     const double mHandleDistanceBase = 3.;
     double       mHandleDistance     = 3.;
+    const double mCrossLengthBase    = 10.;
+    double       mCrossLength        = 10.0;
 
     bool mPressed           = false;
     bool mSelected          = false;
