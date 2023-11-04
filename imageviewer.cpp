@@ -162,6 +162,14 @@ void ImageViewer::wheelEvent(QWheelEvent *event) {
         return;
     }
 
+    if (mSelectedEditorIndex != INVALID_INDEX &&
+        QApplication::keyboardModifiers() == Qt::NoModifier) {
+        auto delta = event->angleDelta().y() / 128.;
+        mEditors[ mSelectedEditorIndex ]->rotate(delta);
+        update();
+        return;
+    }
+
     if (QApplication::keyboardModifiers() & Qt::ControlModifier) {
         double scale         = mWorldScale * pow(mScaleFactor, event->angleDelta().y() / 240.);
         auto   oldWorldScale = mWorldScale;

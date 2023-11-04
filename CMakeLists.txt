@@ -27,6 +27,12 @@ set(PROJECT_SOURCES
         types.h
         labelcategory.h
         labelcategory.cpp
+        circleeditor.h
+        circleeditor.cpp
+        ringeditor.h
+        ringeditor.cpp
+        rotatedrecteditor.h
+        rotatedrecteditor.cpp
         recteditor.h
         recteditor.cpp
         polygoneditor.h

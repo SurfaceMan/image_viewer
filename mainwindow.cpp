@@ -1,7 +1,10 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "circleeditor.h"
 #include "polygoneditor.h"
 #include "recteditor.h"
+#include "ringeditor.h"
+#include "rotatedrecteditor.h"
 
 #include <QAction>
 #include <QActionGroup>
@@ -106,7 +109,7 @@ MainWindow::MainWindow(QWidget *parent)
 
         QSharedPointer<LabelEditor> editor;
         if (action == mUi->actionDrawRect) {
-            editor.reset(new RectEditor);
+            editor.reset(new RotatedRectEditor);
             editor->setCategory(category);
         } else if (action == mUi->actionDrawPolygon) {
             editor.reset(new PolygonEditor);
