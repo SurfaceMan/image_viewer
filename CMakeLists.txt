@@ -48,7 +48,9 @@ set(PROJECT_SOURCES
         label/rectlabel.h
         label/rectlabel.cpp
         label/polygonlabel.h
-        label/polygonlabel.cpp       
+        label/polygonlabel.cpp 
+        label/regionlabel.h
+        label/regionlabel.cpp
 )
 
 add_executable(viewer

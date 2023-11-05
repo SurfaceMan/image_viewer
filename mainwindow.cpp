@@ -5,6 +5,12 @@
 #include "editor/recteditor.h"
 #include "editor/ringeditor.h"
 #include "editor/rotatedrecteditor.h"
+#include "label/circlelabel.h"
+#include "label/polygonlabel.h"
+#include "label/rectlabel.h"
+#include "label/regionlabel.h"
+#include "label/ringlabel.h"
+#include "label/rotatedrectlabel.h"
 
 #include <QAction>
 #include <QActionGroup>
