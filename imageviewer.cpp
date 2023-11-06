@@ -45,6 +45,8 @@ void ImageViewer::paintEvent(QPaintEvent *event) {
     PaintInfo info;
     info.painter    = &painter;
     info.worldScale = getWorldScale();
+    info.size       = mImg.size();
+    info.offset     = mImageOriginOffset;
     foreach (auto &label, mLabels) {
         if (label->category() && !label->category()->visiable()) {
             continue;

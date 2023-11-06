@@ -39,6 +39,8 @@ set(PROJECT_SOURCES
         editor/recteditor.cpp
         editor/polygoneditor.h
         editor/polygoneditor.cpp 
+        editor/regioneditor.h
+        editor/regioneditor.cpp
         label/circlelabel.h
         label/circlelabel.cpp
         label/ringlabel.h
@@ -50,7 +52,7 @@ set(PROJECT_SOURCES
         label/polygonlabel.h
         label/polygonlabel.cpp 
         label/regionlabel.h
-        label/regionlabel.cpp
+        label/regionlabel.cpp   
 )
 
 add_executable(viewer

@@ -3,6 +3,7 @@
 #include "editor/circleeditor.h"
 #include "editor/polygoneditor.h"
 #include "editor/recteditor.h"
+#include "editor/regioneditor.h"
 #include "editor/ringeditor.h"
 #include "editor/rotatedrecteditor.h"
 #include "label/circlelabel.h"
@@ -115,7 +116,7 @@ MainWindow::MainWindow(QWidget *parent)
 
         QSharedPointer<LabelEditor> editor;
         if (action == mUi->actionDrawRect) {
-            editor.reset(new RotatedRectEditor);
+            editor.reset(new RegionEditor);
             editor->setCategory(category);
         } else if (action == mUi->actionDrawPolygon) {
             editor.reset(new PolygonEditor);

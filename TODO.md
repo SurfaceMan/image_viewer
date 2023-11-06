@@ -14,15 +14,15 @@
 
 ## 2d primitive
 1. Arc
-2. Box
-3. Circle
+2. ~Box~
+3. ~Circle~
 4. CoordinateSystem
 6. LabeledRectangle2D
 7. Lin2D
 8. Path
 9. Point2D/PointF
-10. Rectangle
-11. Region
+10. ~Rectangle~
+11. ~Region~
 12. Segment
 13. StringLabel
 
