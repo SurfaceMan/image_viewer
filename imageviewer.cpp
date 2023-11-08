@@ -68,31 +68,37 @@ void ImageViewer::mousePressEvent(QMouseEvent *event) {
         return;
     }
 
-    if (event->button() == Qt::LeftButton && QApplication::keyboardModifiers() == Qt::NoModifier) {
-        if (mInPixelSelect) {
-            // check valid position
-            auto pos = mMousePos.toPoint();
-            if (pos.x() >= 0 && pos.x() < mImg.width() && pos.y() >= 0 && pos.y() < mImg.height()) {
-                auto color = mImg.pixelColor(pos);
-                emit pixelValueChanged(pos, color);
-            } else {
-                emit pixelValueChanged(pos, QColor());
-            }
-        } else {
-            auto pos             = mMousePos;
-            mSelectedEditorIndex = INVALID_INDEX;
-            for (int i = 0; i < mEditors.size(); i++) {
-                if (mEditors[ i ]->select(pos)) {
-                    mSelectedEditorIndex = i;
+    if (event->button() != Qt::LeftButton || QApplication::keyboardModifiers() != Qt::NoModifier) {
+        return;
+    }
 
-                    // unselect other label
-                    pos.setX(std::numeric_limits<float>::max());
-                }
-            }
+    if (mInPixelSelect) {
+        // check valid position
+        auto pos = mMousePos.toPoint();
+        if (pos.x() >= 0 && pos.x() < mImg.width() && pos.y() >= 0 && pos.y() < mImg.height()) {
+            auto color = mImg.pixelColor(pos);
+            emit pixelValueChanged(pos, color);
+        } else {
+            emit pixelValueChanged(pos, QColor());
+        }
+    } else {
+        if (mSelectedEditorIndex != INVALID_INDEX &&
+            mEditors[ mSelectedEditorIndex ]->isCreation()) {
+            mEditors[ mSelectedEditorIndex ]->select(mMousePos);
+            update();
+            return;
         }
 
-    } else if (event->button() == Qt::RightButton) {
-        // context menu
+        auto pos             = mMousePos;
+        mSelectedEditorIndex = INVALID_INDEX;
+        for (int i = 0; i < mEditors.size(); i++) {
+            if (mEditors[ i ]->select(pos)) {
+                mSelectedEditorIndex = i;
+
+                // unselect other label
+                pos.setX(std::numeric_limits<float>::max());
+            }
+        }
     }
 
     update();
