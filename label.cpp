@@ -1,5 +1,9 @@
 #include "label.h"
 
+Label::Label() {
+    mCategory.reset(new LabelCategory);
+}
+
 void Label::setCategory(QSharedPointer<LabelCategory> category) {
     mCategory = category;
 }

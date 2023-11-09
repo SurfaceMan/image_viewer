@@ -54,7 +54,7 @@ void ImageViewer::paintEvent(QPaintEvent *event) {
         label->onPaint(info);
     }
     foreach (auto &editor, mEditors) {
-        if (editor->category() && !editor->category()->visiable()) {
+        if (!editor->category()->visiable()) {
             continue;
         }
         editor->onPaint(info);
@@ -92,7 +92,8 @@ void ImageViewer::mousePressEvent(QMouseEvent *event) {
         auto pos             = mMousePos;
         mSelectedEditorIndex = INVALID_INDEX;
         for (int i = 0; i < mEditors.size(); i++) {
-            if (mEditors[ i ]->select(pos)) {
+            auto &editor = mEditors[ i ];
+            if (editor->category()->visiable() && editor->select(pos)) {
                 mSelectedEditorIndex = i;
 
                 // unselect other label
@@ -146,6 +147,9 @@ void ImageViewer::mouseMoveEvent(QMouseEvent *event) {
     // hightlight
     if (event->buttons() == Qt::NoButton) {
         foreach (auto editor, mEditors) {
+            if (!editor->category()->visiable()) {
+                continue;
+            }
             editor->moving(mMousePos, oldMousePos);
         }
     }

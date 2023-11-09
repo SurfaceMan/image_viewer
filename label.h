@@ -5,7 +5,7 @@
 
 class Label {
 public:
-    Label()          = default;
+    Label();
     virtual ~Label() = default;
 
     void                          setCategory(QSharedPointer<LabelCategory> category);
