@@ -32,6 +32,7 @@ public slots:
     void   loadImage(const QString &filepath);
     void   setImage(const QImage &img);
     QImage image() const;
+    QImage rendering() const;
 
     void setInSelect(bool pixelSelect);
 

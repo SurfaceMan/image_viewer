@@ -48,7 +48,7 @@ void ImageViewer::paintEvent(QPaintEvent *event) {
     info.size       = mImg.size();
     info.offset     = mImageOriginOffset;
     foreach (auto &label, mLabels) {
-        if (label->category() && !label->category()->visiable()) {
+        if (!label->category()->visiable()) {
             continue;
         }
         label->onPaint(info);
@@ -334,6 +334,35 @@ void ImageViewer::setImage(const QImage &img_) {
 
 QImage ImageViewer::image() const {
     return mImg;
+}
+
+QImage ImageViewer::rendering() const {
+    if (mImg.isNull()) {
+        return QImage();
+    }
+
+    QPixmap  target = QPixmap::fromImage(mImg, Qt::ColorOnly);
+    QPainter painter(&target);
+
+    PaintInfo info;
+    info.painter    = &painter;
+    info.worldScale = 1.;
+    info.size       = mImg.size();
+    info.offset     = {0, 0};
+    foreach (auto &label, mLabels) {
+        if (!label->category()->visiable()) {
+            continue;
+        }
+        label->onPaint(info);
+    }
+    foreach (auto &editor, mEditors) {
+        if (!editor->category()->visiable()) {
+            continue;
+        }
+        editor->onPaint(info);
+    }
+
+    return target.toImage();
 }
 
 void ImageViewer::addLabel(const QSharedPointer<Label> &label) {

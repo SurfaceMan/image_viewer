@@ -14,18 +14,18 @@
 
 ## 2d primitive
 1. Arc
-2. ~Box~
-3. ~Circle~
+2. ~~Box~~
+3. ~~Circle~~
 4. CoordinateSystem
 6. LabeledRectangle2D
 7. Lin2D
 8. Path
 9. Point2D/PointF
-10. ~Rectangle~
-11. ~Region~
+10. ~~Rectangle~~
+11. ~~Region~~
 12. Segment
 13. StringLabel
 
 ## dump image
-1. save origin image
-2. save draw image with displayed primitive, size may differ with origin image(min-rectangle of all elements)---image as paint device
+1. ~~save origin image~~
+2. ~~save draw image with displayed primitive, size may differ with origin image(min-rectangle of all elements)---image as paint device~~
