@@ -361,6 +361,9 @@ void ImageViewer::addEditor(const QSharedPointer<LabelEditor> &editor) {
     }
 
     mEditors.append(editor);
+    if (editor->isCreation()) {
+        mSelectedEditorIndex = mEditors.size() - 1;
+    }
     update();
 }
 
