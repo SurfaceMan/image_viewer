@@ -120,6 +120,10 @@ void PolygonEditor::release() {
 
 void PolygonEditor::modify(const QPointF &pos) {
     if (mHandleHighLighted) {
+        if (mPolygon.size() <= 3) {
+            return;
+        }
+
         // remove handle
         mPolygon.removeAt(mHandleIndex);
         return;
