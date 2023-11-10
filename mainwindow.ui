@@ -41,33 +41,14 @@
    <addaction name="actionOpenFile"/>
    <addaction name="actionSaveFile"/>
    <addaction name="separator"/>
-   <addaction name="actionSelect"/>
-   <addaction name="actionDrawRect"/>
-   <addaction name="actionDrawPolygon"/>
-   <addaction name="separator"/>
    <addaction name="actionScaleUp"/>
    <addaction name="actionScaleDown"/>
    <addaction name="actionFitWindow"/>
    <addaction name="actionOriginalSize"/>
    <addaction name="separator"/>
    <addaction name="actionPixelPicker"/>
+   <addaction name="separator"/>
   </widget>
-  <action name="actionDrawRect">
-   <property name="text">
-    <string>DrawRect</string>
-   </property>
-   <property name="toolTip">
-    <string>draw rectangle</string>
-   </property>
-  </action>
-  <action name="actionDrawPolygon">
-   <property name="text">
-    <string>DrawPolygon</string>
-   </property>
-   <property name="toolTip">
-    <string>draw polygon</string>
-   </property>
-  </action>
   <action name="actionScaleUp">
    <property name="text">
     <string>ScaleUp</string>
@@ -125,14 +106,6 @@
    </property>
    <property name="toolTip">
     <string>save file</string>
-   </property>
-  </action>
-  <action name="actionSelect">
-   <property name="text">
-    <string>Select</string>
-   </property>
-   <property name="toolTip">
-    <string>select</string>
    </property>
   </action>
  </widget>

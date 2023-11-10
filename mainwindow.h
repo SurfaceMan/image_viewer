@@ -26,7 +26,7 @@ private:
     Ui::MainWindow *mUi;
     ImageViewer    *mViewer;
 
-    const int mIconFontSize = 18;
+    const int mIconFontSize = 22;
 };
 
 #endif // MAINWINDOW_H

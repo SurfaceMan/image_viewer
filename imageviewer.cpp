@@ -385,7 +385,7 @@ void ImageViewer::clearLabel() {
 }
 
 void ImageViewer::addEditor(const QSharedPointer<LabelEditor> &editor) {
-    if (!editor) {
+    if (!editor || mImg.isNull()) {
         return;
     }
 
