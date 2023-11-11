@@ -119,6 +119,11 @@ void PolygonEditor::release() {
 }
 
 void PolygonEditor::modify(const QPointF &pos) {
+    if (isCreation()) {
+        abortCreation();
+        return;
+    }
+
     if (mHandleHighLighted) {
         if (mPolygon.size() <= 3) {
             return;

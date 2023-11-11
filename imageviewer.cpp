@@ -120,14 +120,8 @@ void ImageViewer::mouseReleaseEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton) {
         editor->release();
     } else if (event->button() == Qt::RightButton) {
-        if (editor->isCreation()) {
-            // abort creation
-            editor->abortCreation();
-            // mSelectedEditorIndex = INVALID_INDEX;
-        } else {
-            // modify
-            editor->modify(mMousePos);
-        }
+        // modify
+        editor->modify(mMousePos);
     }
 
     update();
