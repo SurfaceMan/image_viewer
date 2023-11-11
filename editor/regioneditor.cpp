@@ -7,22 +7,12 @@ RegionEditor::~RegionEditor() {}
 void RegionEditor::onPaint(const PaintInfo &info) {
     info.painter->save();
 
-    // indicator
     auto color = category()->color();
     QPen pen(color);
     pen.setWidth(1);
-    info.painter->setPen(pen);
-
-    color.setAlpha(50);
-    if (PEN == mTool) {
-        info.painter->setBrush(color);
-    }
-    QRectF rect(mCenter.x() - mToolRadius, mCenter.y() - mToolRadius, mToolRadius * 2,
-                mToolRadius * 2);
-    RECT == mToolShape ? info.painter->drawRect(rect) : info.painter->drawEllipse(rect);
 
     if (mRenderedRegion.isNull()) {
-        mRenderedRegion = QPixmap(info.size.toSize());
+        mRenderedRegion = QImage(info.size.toSize(), QImage::Format_ARGB32);
         mRenderedRegion.fill(Qt::transparent);
 
         mPainter.reset(new QPainter(&mRenderedRegion));
@@ -31,13 +21,48 @@ void RegionEditor::onPaint(const PaintInfo &info) {
         mPainter->drawLines(mRegion);
     }
 
-    info.painter->drawPixmap(info.offset, mRenderedRegion);
+    // region
+    info.painter->drawImage(info.offset, mRenderedRegion);
+
+    if (isCreation()) {
+        // indicator
+        info.painter->setPen(pen);
+        color.setAlpha(50);
+        if (PEN == mTool) {
+            info.painter->setBrush(color);
+        }
+        QRectF rect(mCenter.x() - mToolRadius, mCenter.y() - mToolRadius, mToolRadius * 2,
+                    mToolRadius * 2);
+        RECT == mToolShape ? info.painter->drawRect(rect) : info.painter->drawEllipse(rect);
+
+        pen.setStyle(Qt::DotLine);
+        pen.setWidthF(category()->lineWidth() / info.worldScale);
+        info.painter->setPen(pen);
+        info.painter->setBrush(Qt::NoBrush);
+
+        info.painter->drawRect(QRectF(info.offset, info.size));
+    }
 
     info.painter->restore();
 }
 
 bool RegionEditor::select(const QPointF &pos) {
+    // press check
+    if (!mRenderedRegion.valid(pos.x(), pos.y())) {
+        mPressed = false;
+        abortCreation();
+
+        return mPressed;
+    }
+
     mPressed = true;
+    if (!isCreation()) {
+        auto color  = mRenderedRegion.pixelColor(pos.x(), pos.y());
+        auto alpha  = color.alpha();
+        mPressed    = alpha != 0;
+        mInCreation = mPressed;
+        return mPressed;
+    }
 
     auto color = category()->color();
     color.setAlpha(50);
@@ -93,12 +118,12 @@ QVector<QPointF> RegionEditor::region() const {
     // render region to region
     QVector<QPointF> result;
 
-    auto img         = mRenderedRegion.toImage();
-    int  startColumn = -1;
-    int  endColumn   = -1;
+    auto &img         = mRenderedRegion;
+    int   startColumn = -1;
+    int   endColumn   = -1;
     for (int i = 0; i < img.height(); i++) {
         for (int j = 0; j < img.width(); j++) {
-            QColor color = img.pixel(i, j);
+            QColor color = img.pixelColor(i, j);
 
             if (color.alpha() == 0) {
                 if (startColumn == -1) {

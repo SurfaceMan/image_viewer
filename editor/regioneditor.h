@@ -3,7 +3,7 @@
 
 #include "labeleditor.h"
 
-#include <QPixmap>
+#include <QImage>
 
 class RegionEditor : public LabelEditor {
 public:
@@ -36,7 +36,7 @@ public:
 private:
     QVector<QPointF> mRegion;
 
-    QPixmap                  mRenderedRegion;
+    QImage                   mRenderedRegion;
     QSharedPointer<QPainter> mPainter;
 
     Tool    mTool       = PEN;

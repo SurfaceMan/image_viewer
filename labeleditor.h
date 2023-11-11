@@ -17,7 +17,7 @@ public:
     void abortCreation();
     bool isCreation() const;
 
-private:
+protected:
     bool mInCreation = true;
 };
 
