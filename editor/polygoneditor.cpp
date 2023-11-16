@@ -144,7 +144,11 @@ void PolygonEditor::modify(const QPointF &pos) {
         edge2.setAngle(edge.angle() + 90);
         edge2.setP1(edge2.p1() + edge2.p1() - edge2.p2());
 
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
         if (QLineF::BoundedIntersection == edge.intersects(edge2, nullptr)) {
+#else
+        if (QLineF::BoundedIntersection == edge.intersect(edge2, nullptr)) {
+#endif
             mPolygon.insert(i + 1, pos);
             break;
         }
