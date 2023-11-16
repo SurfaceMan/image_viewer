@@ -59,6 +59,8 @@ private:
     QPointF getMousePos();
     void    setMousePos(QMouseEvent *);
 
+    void displayInfo(QPainter &painter);
+
 private:
     // file model
     const int INVALID_INDEX = -1;
@@ -85,7 +87,8 @@ private:
     double  mMouseAngle = 0;
 
     // current mode
-    bool mInPixelSelect = false;
+    bool   mInPixelSelect = false;
+    QColor mSelectedColor;
 
     QImage mBackground;
 };

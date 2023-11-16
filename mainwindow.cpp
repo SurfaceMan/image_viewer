@@ -106,28 +106,6 @@ MainWindow::MainWindow(QWidget *parent)
     // viewer
     setCentralWidget(mViewer);
 
-    // display message
-    auto sizeLabel  = new QLabel(this);
-    auto scaleLabel = new QLabel(this);
-    auto pixelLabel = new QLabel(this);
-    mUi->statusbar->addWidget(sizeLabel);
-    mUi->statusbar->addWidget(scaleLabel);
-    mUi->statusbar->addWidget(pixelLabel);
-    connect(mViewer, &ImageViewer::imageSizeChanged, [ sizeLabel ](const QSize &size) {
-        sizeLabel->setText(tr("Size:[%1x%2]").arg(size.width()).arg(size.height()));
-    });
-    connect(mViewer, &ImageViewer::scaleFactorChanged,
-            [ scaleLabel ](double scale) { scaleLabel->setText(tr("Scale:[%1]").arg(scale)); });
-    connect(mViewer, &ImageViewer::pixelValueChanged,
-            [ pixelLabel ](const QPoint &pos, const QColor &color) {
-                pixelLabel->setText(tr("Position:[x:%1,y:%2] Color:[r:%3,g:%4,b:%5]")
-                                        .arg(pos.x())
-                                        .arg(pos.y())
-                                        .arg(color.red())
-                                        .arg(color.green())
-                                        .arg(color.blue()));
-            });
-
     // event
     connect(mUi->actionFitWindow, &QAction::triggered, mViewer, &ImageViewer::fitToView);
     connect(mUi->actionOriginalSize, &QAction::triggered, mViewer,

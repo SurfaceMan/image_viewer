@@ -4,6 +4,7 @@
 #include <QAction>
 #include <QApplication>
 #include <QDebug>
+#include <QFontMetrics>
 #include <QKeyEvent>
 #include <QMenu>
 #include <QMouseEvent>
@@ -29,8 +30,11 @@ void ImageViewer::paintEvent(QPaintEvent *event) {
     painter.fillRect(rect(), QBrush(mBackground));
 
     if (mImg.isNull()) {
+        displayInfo(painter);
         return;
     }
+
+    painter.save();
 
     // render image with half pixel offset
     QTransform halfPixel;
@@ -59,6 +63,9 @@ void ImageViewer::paintEvent(QPaintEvent *event) {
         }
         editor->onPaint(info);
     }
+
+    painter.restore();
+    displayInfo(painter);
 }
 
 void ImageViewer::mousePressEvent(QMouseEvent *event) {
@@ -76,11 +83,11 @@ void ImageViewer::mousePressEvent(QMouseEvent *event) {
         // check valid position
         auto pos = mMousePos.toPoint();
         if (pos.x() >= 0 && pos.x() < mImg.width() && pos.y() >= 0 && pos.y() < mImg.height()) {
-            auto color = mImg.pixelColor(pos);
-            emit pixelValueChanged(pos, color);
+            mSelectedColor = mImg.pixelColor(pos);
         } else {
-            emit pixelValueChanged(pos, QColor());
+            mSelectedColor = QColor();
         }
+        emit pixelValueChanged(pos, mSelectedColor);
     } else {
         if (mSelectedEditorIndex != INVALID_INDEX &&
             mEditors[ mSelectedEditorIndex ]->isCreation()) {
@@ -135,6 +142,7 @@ void ImageViewer::mouseMoveEvent(QMouseEvent *event) {
     mMousePosPixels = event->pos();
 
     if (mImg.isNull()) {
+        update();
         return;
     }
 
@@ -304,6 +312,51 @@ QPointF ImageViewer::getMousePos() {
 
 void ImageViewer::setMousePos(QMouseEvent *event) {
     mMousePos = getWorldTransform().inverted().map(QPointF(event->pos()));
+}
+
+void ImageViewer::displayInfo(QPainter &painter) {
+    painter.save();
+
+    auto str1 = (mImg.isNull() ? "" : QString("%1x%2 ").arg(mImg.width()).arg(mImg.height())) +
+                QString::number(mWorldScale * 100.f, 'f', 2) + "%";
+    auto str2 = QString("%1,%2").arg(mMousePos.x()).arg(mMousePos.y());
+    auto str3 = mImg.format() != QImage::Format_Grayscale8
+                    ? QString("R:%1,G:%2,B:%3")
+                          .arg(mSelectedColor.red())
+                          .arg(mSelectedColor.green())
+                          .arg(mSelectedColor.blue())
+                    : QString("L:%1").arg(mSelectedColor.lightness());
+
+    QFontMetrics fm(painter.font());
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+    int width1 = fm.boundingRect(str1).width();
+    int width2 = fm.boundingRect(str2).width();
+    int width3 = fm.boundingRect(str3).width();
+#else
+    int width1 = fm.width(str1);
+    int width2 = fm.width(str2);
+    int width3 = fm.width(str3);
+#endif
+
+    int height1 = fm.height();
+    int width   = width1 > width2 ? width1 : width2;
+    int height  = height1 * 2;
+    if (mInPixelSelect) {
+        width  = width > width3 ? width : width3;
+        height = height1 * 3;
+    }
+
+    painter.setPen(QPen(Qt::transparent));
+    painter.setBrush(QColor(35, 35, 35, 100));
+    painter.drawRect(QRect(0, 0, width + 5, height + 5));
+    painter.setPen(QPen(QColor(150, 250, 150)));
+    painter.drawText(2, height1, str1);
+    painter.drawText(2, height1 * 2, str2);
+    if (mInPixelSelect) {
+        painter.drawText(2, height1 * 3, str3);
+    }
+
+    painter.restore();
 }
 
 void ImageViewer::loadImage(const QString &filepath) {
