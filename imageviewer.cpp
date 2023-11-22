@@ -432,7 +432,7 @@ void ImageViewer::clearLabel() {
 }
 
 void ImageViewer::addEditor(const QSharedPointer<LabelEditor> &editor) {
-    if (!editor || mImg.isNull()) {
+    if (!editor || (mImg.isNull() && editor->isCreation())) {
         return;
     }
 
@@ -445,11 +445,13 @@ void ImageViewer::addEditor(const QSharedPointer<LabelEditor> &editor) {
 
 void ImageViewer::removeEditor(const QSharedPointer<LabelEditor> &editor) {
     mEditors.removeAll(editor);
+    mSelectedEditorIndex = INVALID_INDEX;
     update();
 }
 
 void ImageViewer::clearEditor() {
     mEditors.clear();
+    mSelectedEditorIndex = INVALID_INDEX;
     update();
 }
 
