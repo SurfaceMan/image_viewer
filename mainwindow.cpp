@@ -13,6 +13,9 @@
 #include "label/ringlabel.h"
 #include "label/rotatedrectlabel.h"
 
+#include "edgesubpix2.h"
+#include "labelpoint.h"
+
 #include <QAction>
 #include <QActionGroup>
 #include <QFileDialog>
@@ -38,6 +41,28 @@ enum ICON {
     REGION        = 0xe609
 
 };
+
+// Qt读入彩色图后一般为Format_RGB32格式（4通道），而OpenCV一般用3通道的，因此进行了转换。
+cv::Mat QImage2Mat(const QImage &image) {
+    cv::Mat mat;
+    switch (image.format()) {
+        case QImage::Format_RGB32: // 一般Qt读入彩色图后为此格式
+            mat = cv::Mat(image.height(), image.width(), CV_8UC4, (void *)image.constBits(),
+                          image.bytesPerLine());
+            cv::cvtColor(mat, mat, cv::COLOR_BGRA2BGR); // 转3通道
+            break;
+        case QImage::Format_RGB888:
+            mat = cv::Mat(image.height(), image.width(), CV_8UC3, (void *)image.constBits(),
+                          image.bytesPerLine());
+            cv::cvtColor(mat, mat, cv::COLOR_RGB2BGR);
+            break;
+        case QImage::Format_Mono:
+            mat = cv::Mat(image.height(), image.width(), CV_8UC1, (void *)image.constBits(),
+                          image.bytesPerLine());
+            break;
+    }
+    return mat;
+}
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -128,7 +153,53 @@ MainWindow::MainWindow(QWidget *parent)
     connect(actionRegion, &QAction::triggered,
             [ & ]() { mViewer->addEditor(QSharedPointer<RegionEditor>(new RegionEditor)); });
     connect(actionRotatedRect, &QAction::triggered, [ & ]() {
-        mViewer->addEditor(QSharedPointer<RotatedRectEditor>(new RotatedRectEditor));
+        // mViewer->addEditor(QSharedPointer<RotatedRectEditor>(new RotatedRectEditor));
+
+        auto img = mViewer->image();
+        if (img.isNull()) {
+            return;
+        }
+
+        mViewer->clearLabel();
+
+        std::vector<std::vector<cv::Point2d>> points;
+        std::vector<std::vector<cv::Vec2d>>   dirs;
+
+        cv::Mat src;
+        cv::cvtColor(QImage2Mat(img.convertedTo(QImage::Format_RGB888)), src, cv::COLOR_RGB2GRAY);
+
+        EdgePoint(src, points, dirs, 1, 10, 40);
+
+        QVector<QColor> colors = {{240, 163, 255}, {0, 117, 220},   {153, 63, 0},   {76, 0, 92},
+                                  {25, 25, 25},    {0, 92, 49},     {43, 206, 72},  {255, 204, 153},
+                                  {128, 128, 128}, {148, 255, 181}, {143, 124, 0},  {157, 204, 0},
+                                  {194, 0, 136},   {0, 51, 128},    {255, 164, 5},  {255, 168, 187},
+                                  {66, 102, 0},    {255, 0, 16},    {94, 241, 242}, {0, 153, 143},
+                                  {224, 255, 102}, {116, 10, 255},  {153, 0, 0},    {255, 255, 128},
+                                  {255, 255, 0},   {255, 80, 5}};
+
+        for (int i = 0; i < points.size(); i++) {
+            auto &line = points[ i ];
+            auto &vec  = dirs[ i ];
+
+            QPolygonF points;
+            QPolygonF vector;
+
+            for (int j = 0; j < line.size(); j++) {
+                auto &p = line[ j ];
+                auto &v = vec[ j ];
+                points.append({p.x, p.y});
+
+                vector.append({v[ 0 ], v[ 1 ]});
+            }
+
+            auto idx = i % colors.size();
+
+            QSharedPointer<LabelPoint> label(new LabelPoint);
+            label->category()->setColor(colors[ idx ]);
+            label->setPoints(points, vector);
+            mViewer->addLabel(label);
+        }
     });
 }
 

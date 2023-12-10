@@ -12,6 +12,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(OpenCV REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -53,6 +54,10 @@ set(PROJECT_SOURCES
         label/polygonlabel.cpp 
         label/regionlabel.h
         label/regionlabel.cpp   
+        labelpoint.h 
+        labelpoint.cpp
+        edgesubpix2.h 
+        edgesubpix2.cpp
 )
 
 add_executable(viewer
@@ -60,8 +65,8 @@ add_executable(viewer
     res/resource.qrc
 )
 
-target_include_directories(viewer PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-target_link_libraries(viewer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_include_directories(viewer PRIVATE ${CMAKE_CURRENT_SOURCE_DIR} ${OpenCV_INCLUDE_DIRS})
+target_link_libraries(viewer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${OpenCV_LIBRARIES})
 
 include(GNUInstallDirs)
 install(TARGETS viewer
