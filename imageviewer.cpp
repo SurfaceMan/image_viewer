@@ -98,7 +98,7 @@ void ImageViewer::mousePressEvent(QMouseEvent *event) {
 
         auto pos             = mMousePos;
         mSelectedEditorIndex = INVALID_INDEX;
-        for (int i = 0; i < mEditors.size(); i++) {
+        for (int i = mEditors.size() - 1; i >= 0; i--) {
             auto &editor = mEditors[ i ];
             if (editor->category()->visiable() && editor->select(pos)) {
                 mSelectedEditorIndex = i;
