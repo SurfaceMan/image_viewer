@@ -323,7 +323,7 @@ void thresholds_with_hysteresis(cv::Mat &next, cv::Mat &prev, const cv::Mat &mod
 
                 /* follow the chain of edge points backwards */
                 cv::Point prePos = pos;
-                for (; prePos.x >= 0 && (tmp = next.at<cv::Point>(prePos)).x >= 0 &&
+                for (; prePos.x >= 0 && (tmp = prev.at<cv::Point>(prePos)).x >= 0 &&
                        !valid.at<bool>(tmp);
                      prePos = prev.at<cv::Point>(prePos)) {
                     if (modG.at<double>(tmp) < low) {
