@@ -1,7 +1,7 @@
 #include "polygonlabel.h"
 #include "utils.h"
 
-PolygonLabel::PolygonLabel() {}
+PolygonLabel::PolygonLabel() = default;
 
 void PolygonLabel::onPaint(const PaintInfo &info) {
     info.painter->save();

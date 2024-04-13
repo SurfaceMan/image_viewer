@@ -1,6 +1,6 @@
 #include "regionlabel.h"
 
-RegionLabel::RegionLabel() {}
+RegionLabel::RegionLabel() = default;
 
 void RegionLabel::onPaint(const PaintInfo &info) {
     info.painter->save();
@@ -22,6 +22,8 @@ void RegionLabel::setRegion(const QVector<QPointF> &value) {
 }
 
 QPen RegionLabel::getOutlinePen(const PaintInfo &info) const {
+    Q_UNUSED(info)
+
     auto def = category();
     if (!def) {
         return {};

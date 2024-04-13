@@ -16,6 +16,6 @@ QStringList Label::serialize() const {
     return {};
 }
 
-void Label::deserialize(const QStringList &strs) {
-    Q_UNUSED(strs);
+void Label::deserialize(const QStringList &source) {
+    Q_UNUSED(source);
 }

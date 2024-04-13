@@ -23,8 +23,8 @@ QString LabelCategory::description() const {
     return mDescription;
 }
 
-bool LabelCategory::visiable() const {
-    return mVisiable;
+bool LabelCategory::visible() const {
+    return mVisible;
 }
 
 void LabelCategory::setId(int id_) {
@@ -52,7 +52,7 @@ void LabelCategory::setDescription(QString desc_) {
     emit descriptionChanged();
 }
 
-void LabelCategory::setVisiable(bool visiable) {
-    mVisiable = visiable;
+void LabelCategory::setVisible(bool visible) {
+    mVisible = visible;
     emit visiableChanged();
 }

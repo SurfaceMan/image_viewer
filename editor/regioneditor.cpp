@@ -1,8 +1,8 @@
 #include "regioneditor.h"
 
-RegionEditor::RegionEditor() {}
+RegionEditor::RegionEditor() = default;
 
-RegionEditor::~RegionEditor() {}
+RegionEditor::~RegionEditor() = default;
 
 void RegionEditor::onPaint(const PaintInfo &info) {
     info.painter->save();
@@ -48,7 +48,8 @@ void RegionEditor::onPaint(const PaintInfo &info) {
 
 bool RegionEditor::select(const QPointF &pos) {
     // press check
-    if (!mRenderedRegion.valid(pos.x(), pos.y())) {
+    auto pixel = pos.toPoint();
+    if (!mRenderedRegion.valid(pixel.x(), pixel.y())) {
         mPressed = false;
         abortCreation();
 
@@ -57,7 +58,7 @@ bool RegionEditor::select(const QPointF &pos) {
 
     mPressed = true;
     if (!isCreation()) {
-        auto color  = mRenderedRegion.pixelColor(pos.x(), pos.y());
+        auto color  = mRenderedRegion.pixelColor(pixel.x(), pixel.y());
         auto alpha  = color.alpha();
         mPressed    = alpha != 0;
         mInCreation = mPressed;
@@ -90,7 +91,7 @@ void RegionEditor::moving(const QPointF &curPos, const QPointF &lastPos) {
     auto color = category()->color();
     color.setAlpha(50);
     QPen pen(PEN == mTool ? color : Qt::transparent);
-    pen.setWidth(mToolRadius * 2);
+    pen.setWidth(static_cast<int>(mToolRadius * 2));
     pen.setCapStyle(Qt::RoundCap);
 
     mPainter->setPen(pen);
@@ -102,7 +103,7 @@ void RegionEditor::release() {
 }
 
 void RegionEditor::modify(const QPointF &pos) {
-    Q_UNUSED(pos);
+    Q_UNUSED(pos)
 
     mTool = PEN == mTool ? ERASER : PEN;
 }

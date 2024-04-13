@@ -8,7 +8,7 @@
 class RegionEditor : public LabelEditor {
 public:
     RegionEditor();
-    ~RegionEditor();
+    ~RegionEditor() override;
 
     void onPaint(const PaintInfo &info) override;
 

@@ -3,7 +3,7 @@
 
 #include <QPainterPath>
 
-RingLabel::RingLabel() {}
+RingLabel::RingLabel() = default;
 
 void RingLabel::onPaint(const PaintInfo &info) {
     info.painter->save();

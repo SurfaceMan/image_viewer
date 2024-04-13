@@ -5,8 +5,8 @@
 
 class LabelEditor : public Label {
 public:
-    LabelEditor()          = default;
-    virtual ~LabelEditor() = default;
+    LabelEditor()           = default;
+    ~LabelEditor() override = default;
 
     virtual bool select(const QPointF &pos);
     virtual void moving(const QPointF &curPos, const QPointF &lastPos);

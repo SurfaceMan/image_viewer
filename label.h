@@ -13,7 +13,7 @@ public:
 
     virtual void        onPaint(const PaintInfo &info) = 0;
     virtual QStringList serialize() const;
-    virtual void        deserialize(const QStringList &strs);
+    virtual void        deserialize(const QStringList &source);
 
 private:
     QSharedPointer<LabelCategory> mCategory;

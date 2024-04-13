@@ -1,7 +1,7 @@
 #include "circlelabel.h"
 #include "utils.h"
 
-CircleLabel::CircleLabel() {}
+CircleLabel::CircleLabel() = default;
 
 void CircleLabel::onPaint(const PaintInfo &info) {
     info.painter->save();

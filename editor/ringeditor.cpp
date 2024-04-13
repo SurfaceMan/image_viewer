@@ -3,7 +3,7 @@
 
 #include <QPainterPath>
 
-RingEditor::RingEditor() {}
+RingEditor::RingEditor() = default;
 
 void RingEditor::onPaint(const PaintInfo &info) {
     mHandleDistance = mHandleDistanceBase / info.worldScale;

@@ -54,12 +54,6 @@ void RectEditor::onPaint(const PaintInfo &info) {
     info.painter->restore();
 }
 
-QStringList RectEditor::serialize() const {
-    return {};
-}
-
-void RectEditor::deserialize(const QStringList &strs) {}
-
 QRectF generateRect(const QPointF &a, const QPointF &b) {
     auto delta = a - b;
     auto left  = delta.x() > 0 ? b.x() : a.x();

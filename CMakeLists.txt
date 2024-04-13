@@ -63,6 +63,23 @@ add_executable(viewer
 target_include_directories(viewer PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(viewer PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
 
+target_compile_options(viewer PRIVATE
+        $<$<CXX_COMPILER_ID:Clang>:-fPIC -fvisibility=hidden -Wall -Wextra -Wpedantic -Wmisleading-indentation -Wunused -Wuninitialized -Wshadow -Wconversion -Werror>
+)
+
+#if(CMAKE_BUILD_TYPE)
+#    string(TOLOWER ${CMAKE_BUILD_TYPE} BUILD_TYPE)
+#    message("Build Type:${BUILD_TYPE}")
+#
+#    if(${BUILD_TYPE} STREQUAL "debug")
+#        target_compile_options(viewer PRIVATE
+#            $<$<CXX_COMPILER_ID:MSVC>:>
+#            $<$<CXX_COMPILER_ID:GNU>:-fsanitize=address,undefined>
+#            $<$<CXX_COMPILER_ID:Clang>:-fsanitize=address,undefined>
+#        )
+#    endif()
+#endif(CMAKE_BUILD_TYPE)
+
 include(GNUInstallDirs)
 install(TARGETS viewer
     BUNDLE DESTINATION .

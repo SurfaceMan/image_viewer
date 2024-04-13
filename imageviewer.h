@@ -63,9 +63,8 @@ private:
 
 private:
     // file model
-    const int INVALID_INDEX = -1;
-    QImage    mImg;
-    int       mSelectedEditorIndex = INVALID_INDEX;
+    QImage                      mImg;
+    QSharedPointer<LabelEditor> mSelectedEditor;
 
     QList<QSharedPointer<LabelEditor>> mEditors;
     QList<QSharedPointer<Label>>       mLabels;

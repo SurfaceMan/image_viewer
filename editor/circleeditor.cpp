@@ -1,7 +1,7 @@
 #include "circleeditor.h"
 #include "utils.h"
 
-CircleEditor::CircleEditor() {}
+CircleEditor::CircleEditor() = default;
 
 void CircleEditor::onPaint(const PaintInfo &info) {
     mHandleDistance = mHandleDistanceBase / info.worldScale;

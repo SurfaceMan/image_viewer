@@ -1,7 +1,7 @@
 #include "rectlabel.h"
 #include "utils.h"
 
-RectLabel::RectLabel() {}
+RectLabel::RectLabel() = default;
 
 void RectLabel::onPaint(const PaintInfo &info) {
     info.painter->save();

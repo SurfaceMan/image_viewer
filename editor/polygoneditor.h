@@ -10,7 +10,7 @@ public:
 
     void        onPaint(const PaintInfo &info) override;
     QStringList serialize() const override;
-    void        deserialize(const QStringList &strs) override;
+    void        deserialize(const QStringList &source) override;
 
     bool select(const QPointF &pos) override;
     void moving(const QPointF &curPos, const QPointF &lastPos) override;

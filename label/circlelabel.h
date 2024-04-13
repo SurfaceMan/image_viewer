@@ -14,7 +14,6 @@ public:
     void    setCircle(const QPointF &center, double radius);
 
 private:
-    void updateCircle(const QPointF &center, double radius);
     QPen getOutlinePen(const PaintInfo &info) const;
 
 private:

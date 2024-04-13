@@ -1,15 +1,12 @@
 #include "imageviewer.h"
 #include "types.h"
 
-#include <QAction>
 #include <QApplication>
 #include <QDebug>
 #include <QFontMetrics>
 #include <QKeyEvent>
 #include <QMenu>
-#include <QMouseEvent>
 #include <QPainter>
-#include <QWheelEvent>
 #include <limits>
 
 ImageViewer::ImageViewer(QWidget *parent)
@@ -24,7 +21,7 @@ ImageViewer::ImageViewer(QWidget *parent)
 }
 
 void ImageViewer::paintEvent(QPaintEvent *event) {
-    Q_UNUSED(event);
+    Q_UNUSED(event)
     QPainter painter(this);
 
     painter.fillRect(rect(), QBrush(mBackground));
@@ -52,13 +49,13 @@ void ImageViewer::paintEvent(QPaintEvent *event) {
     info.size       = mImg.size();
     info.offset     = mImageOriginOffset;
     foreach (auto &label, mLabels) {
-        if (!label->category()->visiable()) {
+        if (!label->category()->visible()) {
             continue;
         }
         label->onPaint(info);
     }
     foreach (auto &editor, mEditors) {
-        if (!editor->category()->visiable()) {
+        if (!editor->category()->visible()) {
             continue;
         }
         editor->onPaint(info);
@@ -89,19 +86,18 @@ void ImageViewer::mousePressEvent(QMouseEvent *event) {
         }
         emit pixelValueChanged(pos, mSelectedColor);
     } else {
-        if (mSelectedEditorIndex != INVALID_INDEX &&
-            mEditors[ mSelectedEditorIndex ]->isCreation()) {
-            mEditors[ mSelectedEditorIndex ]->select(mMousePos);
+        if (mSelectedEditor && mSelectedEditor->isCreation()) {
+            mSelectedEditor->select(mMousePos);
             update();
             return;
         }
 
-        auto pos             = mMousePos;
-        mSelectedEditorIndex = INVALID_INDEX;
-        for (int i = mEditors.size() - 1; i >= 0; i--) {
+        auto pos = mMousePos;
+        mSelectedEditor.reset();
+        for (auto i = mEditors.size() - 1; i >= 0; i--) {
             auto &editor = mEditors[ i ];
-            if (editor->category()->visiable() && editor->select(pos)) {
-                mSelectedEditorIndex = i;
+            if (editor->category()->visible() && editor->select(pos)) {
+                mSelectedEditor = editor;
 
                 // unselect other label
                 pos.setX(std::numeric_limits<float>::max());
@@ -119,16 +115,15 @@ void ImageViewer::mouseReleaseEvent(QMouseEvent *event) {
         return;
     }
 
-    if (mSelectedEditorIndex == INVALID_INDEX) {
+    if (!mSelectedEditor) {
         return;
     }
 
-    auto &editor = mEditors[ mSelectedEditorIndex ];
     if (event->button() == Qt::LeftButton) {
-        editor->release();
+        mSelectedEditor->release();
     } else if (event->button() == Qt::RightButton) {
         // modify
-        editor->modify(mMousePos);
+        mSelectedEditor->modify(mMousePos);
     }
 
     update();
@@ -146,18 +141,18 @@ void ImageViewer::mouseMoveEvent(QMouseEvent *event) {
         return;
     }
 
-    // hightlight
+    // highlight
     if (event->buttons() == Qt::NoButton) {
         foreach (auto editor, mEditors) {
-            if (!editor->category()->visiable()) {
+            if (!editor->category()->visible()) {
                 continue;
             }
             editor->moving(mMousePos, oldMousePos);
         }
     }
 
-    if (mSelectedEditorIndex != INVALID_INDEX && (event->buttons() & Qt::LeftButton)) {
-        mEditors[ mSelectedEditorIndex ]->moving(mMousePos, oldMousePos);
+    if (mSelectedEditor && (event->buttons() & Qt::LeftButton)) {
+        mSelectedEditor->moving(mMousePos, oldMousePos);
         update();
         return;
     }
@@ -176,10 +171,9 @@ void ImageViewer::wheelEvent(QWheelEvent *event) {
         return;
     }
 
-    if (mSelectedEditorIndex != INVALID_INDEX &&
-        QApplication::keyboardModifiers() == Qt::NoModifier) {
+    if (mSelectedEditor && QApplication::keyboardModifiers() == Qt::NoModifier) {
         auto delta = event->angleDelta().y() / 128.;
-        mEditors[ mSelectedEditorIndex ]->rotate(delta);
+        mSelectedEditor->rotate(delta);
         update();
         return;
     }
@@ -189,10 +183,10 @@ void ImageViewer::wheelEvent(QWheelEvent *event) {
         auto   oldWorldScale = mWorldScale;
         setWorldScale(scale);
 
-        float deltaX =
+        auto deltaX =
             (mWorldOffset.x() * oldWorldScale + mMousePos.x() * (oldWorldScale - mWorldScale)) /
             mWorldScale;
-        float deltaY =
+        auto deltaY =
             (mWorldOffset.y() * oldWorldScale + mMousePos.y() * (oldWorldScale - mWorldScale)) /
             mWorldScale;
 
@@ -211,12 +205,12 @@ void ImageViewer::keyPressEvent(QKeyEvent *event) {
     }
 
     if (event->key() == Qt::Key_Delete) {
-        if (mSelectedEditorIndex == INVALID_INDEX) {
+        if (!mSelectedEditor) {
             return;
         }
 
-        mEditors.removeAt(mSelectedEditorIndex);
-        mSelectedEditorIndex = INVALID_INDEX;
+        mEditors.removeAll(mSelectedEditor);
+        mSelectedEditor.reset();
     }
 
     update();
@@ -237,8 +231,7 @@ void ImageViewer::resetWorldTransform() {
 
 void ImageViewer::setWorldScaleAndUpdate(double value) {
     auto oldWorldScale = mWorldScale;
-    auto centerPos =
-        getWorldTransform().inverted().map(QPointF(this->width() / 2, this->height() / 2));
+    auto centerPos     = getWorldTransform().inverted().map(QPointF(width() / 2., height() / 2.));
 
     setWorldScale(value);
 
@@ -385,7 +378,7 @@ QImage ImageViewer::image() const {
 
 QImage ImageViewer::rendering() const {
     if (mImg.isNull()) {
-        return QImage();
+        return {};
     }
 
     QPixmap  target = QPixmap::fromImage(mImg, Qt::ColorOnly);
@@ -397,13 +390,13 @@ QImage ImageViewer::rendering() const {
     info.size       = mImg.size();
     info.offset     = {0, 0};
     foreach (auto &label, mLabels) {
-        if (!label->category()->visiable()) {
+        if (!label->category()->visible()) {
             continue;
         }
         label->onPaint(info);
     }
     foreach (auto &editor, mEditors) {
-        if (!editor->category()->visiable()) {
+        if (!editor->category()->visible()) {
             continue;
         }
         editor->onPaint(info);
@@ -438,20 +431,20 @@ void ImageViewer::addEditor(const QSharedPointer<LabelEditor> &editor) {
 
     mEditors.append(editor);
     if (editor->isCreation()) {
-        mSelectedEditorIndex = mEditors.size() - 1;
+        mSelectedEditor = editor;
     }
     update();
 }
 
 void ImageViewer::removeEditor(const QSharedPointer<LabelEditor> &editor) {
     mEditors.removeAll(editor);
-    mSelectedEditorIndex = INVALID_INDEX;
+    mSelectedEditor.reset();
     update();
 }
 
 void ImageViewer::clearEditor() {
     mEditors.clear();
-    mSelectedEditorIndex = INVALID_INDEX;
+    mSelectedEditor.reset();
     update();
 }
 

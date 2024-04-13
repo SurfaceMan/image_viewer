@@ -41,7 +41,9 @@ QStringList PolygonEditor::serialize() const {
     return {};
 }
 
-void PolygonEditor::deserialize(const QStringList &strs) {}
+void PolygonEditor::deserialize(const QStringList &source) {
+    Q_UNUSED(source)
+}
 
 bool PolygonEditor::select(const QPointF &pos) {
 

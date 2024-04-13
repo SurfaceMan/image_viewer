@@ -10,7 +10,7 @@
 2. ~~scale percent~~
 3. ~~pixel value~~
 4. measure info: length/angle/box(x,y,w,h)
-5. input info: name/[size]/color/layer/visiable/remove
+5. input info: name/[size]/color/layer/visible/remove
 
 ## 2d primitive
 1. Arc
