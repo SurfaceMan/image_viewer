@@ -1,4 +1,5 @@
 #include "imageviewer.h"
+#include "label/imagelabel.h"
 #include "types.h"
 
 #include <QApplication>
@@ -25,35 +26,32 @@ void ImageViewer::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
 
     painter.fillRect(rect(), QBrush(mBackground));
-
-    if (mImg.isNull()) {
-        displayInfo(painter);
-        return;
-    }
-
     painter.save();
+
+    PaintInfo info;
+    info.painter    = &painter;
+    info.size       = mImageLabel ? mImageLabel->image().size() : QSizeF{0, 0};
+    info.worldScale = getWorldScale();
+    info.offset     = mImageOriginOffset;
 
     // render image with half pixel offset
     QTransform halfPixel;
     halfPixel.translate(mImageOriginOffset.x(), mImageOriginOffset.y());
     painter.setTransform(halfPixel * getWorldTransform());
-    painter.drawImage(0, 0, mImg);
+    if (mImageLabel && mImageLabel->category()->visible()) {
+        mImageLabel->onPaint(info);
+    }
 
     // Setup world transform matrix
     painter.setTransform(getWorldTransform());
     painter.setRenderHint(QPainter::Antialiasing);
-
-    PaintInfo info;
-    info.painter    = &painter;
-    info.worldScale = getWorldScale();
-    info.size       = mImg.size();
-    info.offset     = mImageOriginOffset;
     foreach (auto &label, mLabels) {
         if (!label->category()->visible()) {
             continue;
         }
         label->onPaint(info);
     }
+
     foreach (auto &editor, mEditors) {
         if (!editor->category()->visible()) {
             continue;
@@ -68,22 +66,24 @@ void ImageViewer::paintEvent(QPaintEvent *event) {
 void ImageViewer::mousePressEvent(QMouseEvent *event) {
     setMousePos(event);
 
-    if (mImg.isNull()) {
-        return;
-    }
-
     if (event->button() != Qt::LeftButton || QApplication::keyboardModifiers() != Qt::NoModifier) {
         return;
     }
 
     if (mInPixelSelect) {
-        // check valid position
         auto pos = mMousePos.toPoint();
-        if (pos.x() >= 0 && pos.x() < mImg.width() && pos.y() >= 0 && pos.y() < mImg.height()) {
-            mSelectedColor = mImg.pixelColor(pos);
-        } else {
+        if (!mImageLabel || mImageLabel->image().isNull()) {
             mSelectedColor = QColor();
+        } else {
+            // check valid position
+            const auto &img = mImageLabel->image();
+            if (pos.x() >= 0 && pos.x() < img.width() && pos.y() >= 0 && pos.y() < img.height()) {
+                mSelectedColor = img.pixelColor(pos);
+            } else {
+                mSelectedColor = QColor();
+            }
         }
+
         emit pixelValueChanged(pos, mSelectedColor);
     } else {
         if (mSelectedEditor && mSelectedEditor->isCreation()) {
@@ -111,10 +111,6 @@ void ImageViewer::mousePressEvent(QMouseEvent *event) {
 void ImageViewer::mouseReleaseEvent(QMouseEvent *event) {
     setMousePos(event);
 
-    if (mImg.isNull()) {
-        return;
-    }
-
     if (!mSelectedEditor) {
         return;
     }
@@ -135,11 +131,6 @@ void ImageViewer::mouseMoveEvent(QMouseEvent *event) {
 
     auto oldPos     = mMousePosPixels;
     mMousePosPixels = event->pos();
-
-    if (mImg.isNull()) {
-        update();
-        return;
-    }
 
     // highlight
     if (event->buttons() == Qt::NoButton) {
@@ -167,10 +158,6 @@ void ImageViewer::mouseMoveEvent(QMouseEvent *event) {
 }
 
 void ImageViewer::wheelEvent(QWheelEvent *event) {
-    if (mImg.isNull()) {
-        return;
-    }
-
     if (mSelectedEditor && QApplication::keyboardModifiers() == Qt::NoModifier) {
         auto delta = event->angleDelta().y() / 128.;
         mSelectedEditor->rotate(delta);
@@ -200,10 +187,6 @@ void ImageViewer::wheelEvent(QWheelEvent *event) {
 }
 
 void ImageViewer::keyPressEvent(QKeyEvent *event) {
-    if (mImg.isNull()) {
-        return;
-    }
-
     if (event->key() == Qt::Key_Delete) {
         if (!mSelectedEditor) {
             return;
@@ -259,15 +242,16 @@ void ImageViewer::zoomOut() {
 }
 
 void ImageViewer::fitToView() {
-    if (mImg.isNull()) {
+    if (!mImageLabel || mImageLabel->image().isNull()) {
         resetWorldTransform();
     } else {
-        auto scaleX = double(width()) / mImg.width();
-        auto scaleY = double(height()) / mImg.height();
+        const auto &img    = mImageLabel->image();
+        auto        scaleX = double(width()) / img.width();
+        auto        scaleY = double(height()) / img.height();
 
         setWorldScale(std::min(scaleX, scaleY));
-        mWorldOffset = {(width() / mWorldScale - mImg.width()) / 2,
-                        (height() / mWorldScale - mImg.height()) / 2};
+        mWorldOffset = {(width() / mWorldScale - img.width()) / 2,
+                        (height() / mWorldScale - img.height()) / 2};
     }
 
     mFitToViewOnResize = true;
@@ -310,10 +294,14 @@ void ImageViewer::setMousePos(QMouseEvent *event) {
 void ImageViewer::displayInfo(QPainter &painter) {
     painter.save();
 
-    auto str1 = (mImg.isNull() ? "" : QString("%1x%2 ").arg(mImg.width()).arg(mImg.height())) +
+    QImage      empty;
+    const auto &img =
+        (mImageLabel && !mImageLabel->image().isNull()) ? mImageLabel->image() : empty;
+
+    auto str1 = (img.isNull() ? "" : QString("%1x%2 ").arg(img.width()).arg(img.height())) +
                 QString::number(mWorldScale * 100.f, 'f', 2) + "%";
     auto str2 = QString("%1,%2").arg(mMousePos.x()).arg(mMousePos.y());
-    auto str3 = mImg.format() != QImage::Format_Grayscale8
+    auto str3 = img.format() != QImage::Format_Grayscale8
                     ? QString("R:%1,G:%2,B:%3")
                           .arg(mSelectedColor.red())
                           .arg(mSelectedColor.green())
@@ -362,8 +350,10 @@ void ImageViewer::setImage(const QImage &img_) {
         return;
     }
 
-    mImg = img_;
-    emit imageSizeChanged(mImg.size());
+    mImageLabel.reset(new ImageLabel);
+    mImageLabel->setImage(img_);
+
+    emit imageSizeChanged(img_.size());
 
     if (mFitToViewOnLoad) {
         fitToView();
@@ -373,21 +363,27 @@ void ImageViewer::setImage(const QImage &img_) {
 }
 
 QImage ImageViewer::image() const {
-    return mImg;
-}
-
-QImage ImageViewer::rendering() const {
-    if (mImg.isNull()) {
+    if (!mImageLabel || mImageLabel->image().isNull()) {
         return {};
     }
 
-    QPixmap  target = QPixmap::fromImage(mImg, Qt::ColorOnly);
+    return mImageLabel->image();
+}
+
+QImage ImageViewer::rendering() const {
+    if (!mImageLabel || mImageLabel->image().isNull()) {
+        return {};
+    }
+
+    auto &img = mImageLabel->image();
+
+    QPixmap  target = QPixmap::fromImage(img, Qt::ColorOnly);
     QPainter painter(&target);
 
     PaintInfo info;
     info.painter    = &painter;
     info.worldScale = 1.;
-    info.size       = mImg.size();
+    info.size       = img.size();
     info.offset     = {0, 0};
     foreach (auto &label, mLabels) {
         if (!label->category()->visible()) {
@@ -410,22 +406,33 @@ void ImageViewer::addLabel(const QSharedPointer<Label> &label) {
         return;
     }
 
-    mLabels.append(label);
+    auto imageLabel = label.dynamicCast<ImageLabel>();
+    if (imageLabel) {
+        mImageLabel = imageLabel;
+    } else {
+        mLabels.append(label);
+    }
+
     update();
 }
 
 void ImageViewer::removeLabel(const QSharedPointer<Label> &label) {
     mLabels.removeAll(label);
+    if (mImageLabel == label) {
+        mImageLabel.reset();
+    }
+
     update();
 }
 
 void ImageViewer::clearLabel() {
     mLabels.clear();
+    mImageLabel.reset();
     update();
 }
 
 void ImageViewer::addEditor(const QSharedPointer<LabelEditor> &editor) {
-    if (!editor || (mImg.isNull() && editor->isCreation())) {
+    if (!editor) {
         return;
     }
 

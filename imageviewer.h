@@ -7,6 +7,8 @@
 #include "label.h"
 #include "labeleditor.h"
 
+class ImageLabel;
+
 class ImageViewer : public QWidget {
     Q_OBJECT
 public:
@@ -63,7 +65,7 @@ private:
 
 private:
     // file model
-    QImage                      mImg;
+    QSharedPointer<ImageLabel>  mImageLabel;
     QSharedPointer<LabelEditor> mSelectedEditor;
 
     QList<QSharedPointer<LabelEditor>> mEditors;
