@@ -1,7 +1,7 @@
 #include "recteditor.h"
 #include "utils.h"
 
-RectEditor::RectEditor() {}
+RectEditor::RectEditor() = default;
 
 void RectEditor::onPaint(const PaintInfo &info) {
     mHandleDistance = mHandleDistanceBase / info.worldScale;

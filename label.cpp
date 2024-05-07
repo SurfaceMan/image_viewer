@@ -5,7 +5,7 @@ Label::Label() {
 }
 
 void Label::setCategory(QSharedPointer<LabelCategory> category) {
-    mCategory = category;
+    mCategory = std::move(category);
 }
 
 QSharedPointer<LabelCategory> Label::category() const {
@@ -17,5 +17,5 @@ QStringList Label::serialize() const {
 }
 
 void Label::deserialize(const QStringList &source) {
-    Q_UNUSED(source);
+    Q_UNUSED(source)
 }

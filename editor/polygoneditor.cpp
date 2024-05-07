@@ -1,7 +1,7 @@
 #include "polygoneditor.h"
 #include "utils.h"
 
-PolygonEditor::PolygonEditor() {}
+PolygonEditor::PolygonEditor() = default;
 
 void PolygonEditor::onPaint(const PaintInfo &info) {
     mHandleDistance = mHandleDistanceBase / info.worldScale;

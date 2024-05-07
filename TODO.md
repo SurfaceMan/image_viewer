@@ -17,14 +17,14 @@
 2. ~~Box~~
 3. ~~Circle~~
 4. CoordinateSystem
-6. LabeledRectangle2D
-7. Lin2D
-8. Path
-9. Point2D/PointF
-10. ~~Rectangle~~
-11. ~~Region~~
-12. Segment
-13. StringLabel
+5. LabeledRectangle2D
+6. Lin2D
+7. Path
+8. Point2D/PointF
+9. ~~Rectangle~~
+10. ~~Region~~
+11. Segment
+12. StringLabel
 
 ## dump image
 1. ~~save origin image~~

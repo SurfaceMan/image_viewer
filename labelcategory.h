@@ -44,7 +44,7 @@ signals:
     void visiableChanged();
 
 private:
-    int     mId;
+    int     mId = 0;
     QString mName;
     QColor  mColor     = Qt::green;
     int     mLineWidth = 2;
