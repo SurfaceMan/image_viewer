@@ -41,6 +41,8 @@ set(PROJECT_SOURCES
         editor/polygoneditor.cpp 
         editor/regioneditor.h
         editor/regioneditor.cpp
+        editor/rulereditor.h
+        editor/rulereditor.cpp
         label/circlelabel.h
         label/circlelabel.cpp
         label/ringlabel.h

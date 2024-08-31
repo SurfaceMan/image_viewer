@@ -9,6 +9,7 @@
 #include <QMenu>
 #include <QPainter>
 #include <limits>
+#include <cmath>
 
 ImageViewer::ImageViewer(QWidget *parent)
     : QWidget{parent} {
