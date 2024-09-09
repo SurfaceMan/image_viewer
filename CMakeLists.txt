@@ -43,6 +43,8 @@ set(PROJECT_SOURCES
         editor/regioneditor.cpp
         editor/rulereditor.h
         editor/rulereditor.cpp
+        editor/protractoreditor.h
+        editor/protractoreditor.cpp
         label/circlelabel.h
         label/circlelabel.cpp
         label/ringlabel.h
